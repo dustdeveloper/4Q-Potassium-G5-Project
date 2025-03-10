@@ -67,6 +67,7 @@ class Signal extends _CrippledSignal {
         for (const [name, _] of Object.entries(this.reciever_dict)) {
             this.disconnect(name);
         };
+        
         this.destroying.fire(); // fire the destroying signal
         this.destroying.destroy();
         delete this; // no clue if this works or not
