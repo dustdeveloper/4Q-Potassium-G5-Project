@@ -37,7 +37,7 @@ class _CrippledSignal { // DO NOT USE THIS CLASS
     fire(...arg) {
         // it runs the reciever functions in the dictionary
         // sends the arg to the reciever functions if provided
-        for (const [_, r_function] of Object.entries(this.reciever_dict)) {
+        for (let [_, r_function] of Object.entries(this.reciever_dict)) {
             if (!(typeof r_function === 'function')) {
                 continue;
             };
@@ -48,10 +48,11 @@ class _CrippledSignal { // DO NOT USE THIS CLASS
 
     destroy() {
         // it destroys the signal itself, cleaning it.
-        for (const [name, _] of Object.entries(this.reciever_dict)) {
+        for (let [name, _] of Object.entries(this.reciever_dict)) {
             this.disconnect(name);
         };
         // this doesn't fire the destroy function
+        delete this;
     };
 }
 
@@ -64,12 +65,12 @@ class Signal extends _CrippledSignal {
 
     destroy() {
         // it destroys the signal itself, cleaning it.
-        for (const [name, _] of Object.entries(this.reciever_dict)) {
+        for (let [name, _] of Object.entries(this.reciever_dict)) {
             this.disconnect(name);
         };
-        
+
         this.destroying.fire(); // fire the destroying signal
         this.destroying.destroy();
-        delete this; // no clue if this works or not
+        delete this;
     };
 }
