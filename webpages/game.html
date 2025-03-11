@@ -1,9 +1,78 @@
 <!DOCTYPE html>
 <html>
     <head>
-        
+        <script src="../scripts/game.js"></script>
+        <link rel="stylesheet" href="game.css">
     </head>
     <body>
+        <div class="panel" id="panel-one">
+            <div class="imminent-error" id="top">
+                <p id="timer">00:00.00</p>
+                <p id="title">SYSTEM FAILURE IMMINENT</p>
+                <p id="instructions">Minimize rate of integrity loss to LESS THAN 15% within the timer and regenerate system integrity to MORE THAN 10%. Failure to resolve will result to further damage.</p>
+                <br>
+                <p class="error-status">system integrity: 100%>10%</p>
+                <p class="error-status">integrity loss: 50%>15%</p>
+                <p class="error-status">resolution advisories: 10</p>
+                <p class="error-status">failed: 0</p>
+            </div>
 
+            <!--
+            <div class="crash-screen" id="crash-top">
+                <p id="crash-text-special">##### Monitoring System Crash #####</p>
+                <br>
+                <p>FATAL SYSTEM INTERRUPTION</p>
+                <p>Error Code 0x000056 [MONITORING_OVERRIDE_DETECTED]</p>
+                <p>Time Of Error: 00/00/00, 00:00:00</p>
+                <br>
+                <p>Please immediately contact maintenance technicals at callcode 12-003.</p>
+                <p>Start the monitoring system to NOMINAL operational status with the SERVICE MANUAL.</p>
+                <br>
+                <p>The monitoring system will shut down in 15 seconds.</p>
+                <br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+                <p id="crash-text-special">IF YOU ARE A MAINTENCANCE TECHNICAL, YOU MAY:</p>
+                <p>press F11 to stop the shutdown.</p>
+                <p>press F12 to open the debug menu.</p>
+                <p>access the 'Maintenance Panel' to retrieve logs.</p>
+            </div>
+            -->
+
+            <
+        </div>
+        <div class="panel" id="panel-two">
+            <div class="category" id="status">
+                <p>OK</p>
+            </div>
+            <div class="category" id="information">
+                <div class="aesthetic" id="unit">
+                    <p> -- UNITS MONITOR ---------------- </p>
+                    <p>units OK: unknown</p>
+                    <p>units RES-ADV: unknown</p>
+                    <p>units FAIL: unknown</p>
+                </div>
+                <div class="aesthetic" id="general">
+                    <p> -- GENERAL MONITOR -------------- </p>
+                    <p>next update: unknown</p>
+                    <p>total changes: unknown</p>
+                    <p>system integrity: unknown</p>
+                </div>
+                <div class="aesthetic" id="issues">
+                    <p> -- ISSUES MONITOR [no issues] --- </p>
+                </div>
+            </div>
+
+            <!--
+            <div class="crash-screen" id="crash-bottom">
+                <p>Start the monitoring system to NOMINAL operational status with the SERVICE MANUAL.</p>
+                <br>
+                <p>The monitoring system will shut down in 15 seconds.</p>
+            </div>
+            -->
+
+            <div class="imminent-error" id="bottom">
+                <p id="timer">00:00.00</p>
+                <p id="title">SYSTEM FAILURE IMMINENT</p>
+            </div>
+        </div>
     </body>
 </html>

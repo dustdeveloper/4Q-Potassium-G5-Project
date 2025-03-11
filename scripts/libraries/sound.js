@@ -62,4 +62,8 @@ class Sound {
         this.#audio.volume = number;
         return true;
     };
+
+    set_looped(bool) {
+        this.#audio.loop = bool;
+    };
 }
