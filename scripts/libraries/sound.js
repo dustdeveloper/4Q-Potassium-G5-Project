@@ -1,6 +1,5 @@
 class Sound {
     // simple audio wrapper implementation
-    #volume
     #audio
     #sound_ok = false
 
@@ -11,8 +10,8 @@ class Sound {
     playing = new Signal;
 
     constructor(sound_location, volume) {
-        this.#volume = volume
         this.#audio = new Audio(sound_location);
+        this.set_volume(volume);
 
         this.#audio.load()
         this.#audio.addEventListener("canplaythrough", event => {
@@ -21,8 +20,10 @@ class Sound {
         });
 
         this.#audio.addEventListener("ended", event => {
-            this.stopped.fire()
-        })
+            this.stopped.fire();
+        });
+
+        return true;
     };
 
     play() {
@@ -30,21 +31,35 @@ class Sound {
             return false;
         };
 
-        this.#audio.play()
-        this.playing.fire()
+        this.#audio.play();
+        this.playing.fire();
+        return true;
     };
     pause() { // temporarily stops playback
-        this.#audio.pause()
-        this.paused.fire()
+        this.#audio.pause();
+        this.paused.fire();
     };
-    stop_at(number) { // schedules when to stop a sound
-        this.#audio.stop(number)
+    stop() {
+        this.#audio.pause();
+        this.#audio.currentTime = 0;
+        this.stopped.fire();
+        return true;
+    }
+
+    set_time(number) {
+        if (!this.#sound_ok) {
+            return false;
+        };
+
+        this.#audio.currentTime = number;
+        return true;
     };
+    set_volume(number=1) {
+        if (!this.#sound_ok) {
+            return false;
+        };
 
-    set_time() {
-
-    };
-    set_volume() {
-
+        this.#audio.volume = number;
+        return true;
     };
 }
