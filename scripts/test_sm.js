@@ -1,5 +1,3 @@
-let test_state_machine = new StateMachine;
-
 let states = {
     "stateone": function t(){
         console.log("Rah!")
@@ -12,7 +10,7 @@ let states = {
     }
 }
 
-test_state_machine.set_state_dict(states)
+let test_state_machine = new StateMachine(states);
 
 test_state_machine.change_state("stateone")
 test_state_machine.change_state("statetwo")

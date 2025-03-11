@@ -1,0 +1,1 @@
+let test_sound = new Sound("", 0.1)
