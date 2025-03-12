@@ -3,6 +3,28 @@
     src: url(../VCR_OSD_MONO.ttf);
 }
 
+@keyframes blinker {
+    90% {
+      opacity: 0;
+    }
+    70% {
+        opacity: 1;
+    }
+}
+
+@keyframes slideup {
+    0% {
+      transform: translateY(0px);
+    }
+    100% {
+      transform: translateY(-700px); /* The image width */
+    }
+  }
+
+html, body {
+    overflow: hidden
+}
+
 body, p {
     margin: 0;
     padding: 0;
@@ -14,6 +36,19 @@ body {
 
 p {
     color: white;
+    text-shadow: 0 0 5px;
+}
+
+.panel img {
+    z-index: 1000;
+    position: absolute;
+    pointer-events: none; /* Allows clicking through */
+
+    height: 300%;
+    width: 100%;
+    opacity: 0.3;
+
+    animation: slideup 10s linear infinite;
 }
 
 .panel {
@@ -102,6 +137,10 @@ p {
     position: absolute;
     z-index: 100;
 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
     height: 100%;
     width: 20%;
 
@@ -115,6 +154,8 @@ p {
     font-family:monospace;
     font-weight: 900;
     font-size: 3.5em;
+
+    animation: blinker 1s linear infinite;
 }
 
 .imminent-error #title {
@@ -128,7 +169,7 @@ p {
 
 .imminent-error #instructions {
     font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    text-align: left;
+    text-align: justify;
 
     margin-left: 10px;
     margin-right: 10px;
@@ -169,4 +210,21 @@ p {
 .crash-screen #crash-text-special {
     background-color: white;
     color: black;
+    margin-left: 30%;
+    margin-right: 30%;
+}
+
+.boot {
+    position: absolute;
+    background-color: rgb(14, 4, 4);
+    width: 100%;
+    height: 100%;
+    z-index: 200;
+
+    display: flex;
+    flex-direction: column;
+    
+    border-radius: 5px;
+
+    font-family: monospace;
 }
