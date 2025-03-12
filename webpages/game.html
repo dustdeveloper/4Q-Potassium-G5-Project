@@ -7,6 +7,7 @@
     <body>
         <div class="panel" id="panel-one">
             <div class="image"></div>
+
             <div class="imminent-error" id="top">
                 <p id="timer">00:00.00</p>
                 <p id="title">SYSTEM FAILURE IMMINENT</p>
@@ -17,6 +18,84 @@
                 <p class="error-status">resolution advisories: 10</p>
                 <p class="error-status">failed: 0</p>
             </div>
+
+            <div class="core-system">
+                <button class="unit-item" id="unit-1" style="grid-area: unit-1" onclick="trigger(1)" >
+                <p id="unit-name">UNIT 01</p>
+                </button>
+                <button class="unit-item" id="unit-2" style="grid-area: unit-2" onclick="trigger(2)" >
+                <p id="unit-name">UNIT 02</p>
+                </button>
+                <button class="unit-item" id="unit-3" style="grid-area: unit-3" onclick="trigger(3)" >
+                <p id="unit-name">UNIT 03</p>
+                </button>
+                <button class="unit-item" id="unit-4" style="grid-area: unit-4" onclick="trigger(4)" >
+                <p id="unit-name">UNIT 04</p>
+                </button>
+                <button class="unit-item" id="unit-5" style="grid-area: unit-5" onclick="trigger(5)" >
+                <p id="unit-name">UNIT 05</p>
+                </button>
+                <button class="unit-item" id="unit-6" style="grid-area: unit-6" onclick="trigger(6)" >
+                <p id="unit-name">UNIT 06</p>
+                </button>
+                <button class="unit-item" id="unit-7" style="grid-area: unit-7" onclick="trigger(7)" >
+                <p id="unit-name">UNIT 07</p>
+                </button>
+                <button class="unit-item" id="unit-8" style="grid-area: unit-8" onclick="trigger(8)" >
+                <p id="unit-name">UNIT 08</p>
+                </button>
+                <button class="unit-item" id="unit-9" style="grid-area: unit-9" onclick="trigger(9)" >
+                    <p id="unit-name">UNIT 09</p>
+                </button>
+                <button class="unit-item" id="unit-10" style="grid-area: unit-10" onclick="trigger(10)">
+                    <p id="unit-name">UNIT 10</p>
+                </button>
+                <button class="unit-item" id="unit-11" style="grid-area: unit-11" onclick="trigger(11)">
+                    <p id="unit-name">UNIT 11</p>
+                </button>
+                <button class="unit-item" id="unit-12" style="grid-area: unit-12" onclick="trigger(12)">
+                    <p id="unit-name">UNIT 12</p>
+                </button>
+            </div>
+
+            <div class="close-monitor">
+                <h1>UNIT 01</h1>
+                <h4 id="detected">Unit is requesting a RESOLUTION ADVISORY (RES-ADV).</h4>
+                <h4 id="suspected">Suspected Issue(s): OVERHEAT, OVERLOAD, COOL_PRESS_LOST, COOL_OVERHEAT, DISCONNECTED, FIRE, CASING_DAMAGE, PRESSURE_DAMAGE, POWER_OUT, NON-SYNC, NON-FUNCTIONAL</h4>
+                <hr><br>
+                <p id="connection">Connection is: ALIVE</p>
+                <p id="health">Unit Health: 100% [STABLE]</p>
+                <br>
+                <p>Unit Metrics:</p>
+                <p id="coolant-temperature">&emsp;&emsp; Coolant Temperature: 10°C [STABLE]</p>
+                <p id="coolant-pressure">&emsp;&emsp; Coolant Pressure: 1 atm [STABLE]</p>
+                <p id="coolant-liters">&emsp;&emsp; Coolant Amount: 11L/20L [STABLE]</p>
+                <br>
+                <p id="temperature">&emsp;&emsp; Recorded System Temperature: 10°C [STABLE]</p>
+                <p id="load">&emsp;&emsp; System Load: 10% [STABLE]</p>
+                <br>
+                <p id="queue">&emsp;&emsp; Process Queue: 7/15 [STABLE]</p>
+                <p id="epct">&emsp;&emsp; Estimated Process Completion Time: 00:00.00</p>
+                <br>
+                <p id="queue">&emsp;&emsp;</p>
+                <p id="epct">&emsp;&emsp; Estimated Process Completion Time: 00:00.00</p>
+                <br>
+                <hr>
+                <br>
+                <p>Automatic Servicing</p>
+                <button>Restart Connection</button>
+                <button>Restart Auto Pumping Systems</button>
+                <br>
+                <p>Manual System Controls</p>
+                <br>
+                <button>Toggle Entry Coolant valve</button>
+                <button>Toggle Exit Coolant valve</button>
+                <button>Activate Emergency Extinguisher</button>
+                <button>Connect Main Energy to Unit</button>
+                <button>Clear-out Process Queue</button>
+                <button>Toggle Processing</button>
+            </div>
+            
             <!--
             <div class="boot" id="boot-top">
                 <img>
@@ -72,13 +151,13 @@
                 <p>press F11 to stop the shutdown.</p>
                 <p>press F12 to open the debug menu.</p>
                 <p>access the 'Maintenance Panel' to retrieve logs.</p>
-            </div>-->
-            
+            </div>
+            -->
         </div>
         <div class="panel" id="panel-two">
             <div class="image"></div>
             <div class="category" id="status">
-                <p>OK</p>
+                <p>FAIL</p>
             </div>
             <div class="category" id="information">
                 <div class="aesthetic" id="unit">
@@ -90,7 +169,7 @@
                 <div class="aesthetic" id="general">
                     <p> -- GENERAL MONITOR -------------- </p>
                     <p>next update: unknown</p>
-                    <p>total changes: unknown</p>
+                    <p>energy left: unknown</p>
                     <p>system integrity: unknown</p>
                 </div>
                 <div class="aesthetic" id="issues">
@@ -108,7 +187,8 @@
                 <p>Start the monitoring system to NOMINAL operational status with the SERVICE MANUAL.</p>
                 <br>
                 <p>The monitoring system will shut down in 15 seconds.</p>
-            </div>-->
+            </div>
+            -->
             <div class="imminent-error" id="bottom">
                 <p id="timer">00:00.00</p>
                 <p id="title">SYSTEM FAILURE IMMINENT</p>

@@ -7,7 +7,7 @@
     90% {
       opacity: 0;
     }
-    70% {
+    100% {
         opacity: 1;
     }
 }
@@ -17,9 +17,42 @@
       transform: translateY(0px);
     }
     100% {
-      transform: translateY(-940px); /* The image width */
+      transform: translateY(-930px); /* The image width */
     }
-  }
+}
+
+@keyframes dead { /*disconnected / thing exploded*/
+    0% {
+      background-color: rgb(87, 24, 24);
+    }
+    100% {
+      background-color: rgb(53, 16, 16);
+    }
+}
+
+@keyframes flash-three { /*imminent failure*/
+    0% {
+      background-color: orange;
+    }
+    100% {
+      background-color: red;
+    }
+}
+
+@keyframes flash-two { /*serious issue*/
+    0% {
+      background-color: yellow;
+    }
+    100% {
+      background-color: orange;
+    }
+}
+
+@keyframes flash-one { /*notice level*/
+    100% {
+      background-color: royalblue;
+    }
+}
 
 html, body {
     overflow: hidden
@@ -34,7 +67,7 @@ body {
     background-color: black;
 }
 
-p {
+p, h1, h3, h4 {
     color: white;
     text-shadow: 0 0 5px;
 }
@@ -67,6 +100,11 @@ p {
     height: 84vh;
     margin-top: 1vh;
     margin-bottom: 1vh;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    align-items:center;
 }
 
 #panel-two {
@@ -81,7 +119,7 @@ p {
 }*/
 
 #status {
-    background-color: chartreuse;
+    background-color: red;
     flex: 0.5;
     border-radius: 5px 0 0 5px;
     line-height: 80px;
@@ -152,9 +190,8 @@ p {
 }
 
 .imminent-error #timer {
-    font-family:monospace;
-    font-weight: 100;
-    font-size: 600%;
+    font-family: VCR_OSD_MONO;
+    font-size: 3.5em;
 
     animation: blinker 1s linear infinite;
 }
@@ -228,4 +265,76 @@ p {
     border-radius: 5px;
 
     font-family: monospace;
+}
+
+.core-system {
+    position: relative;
+    display: grid;
+
+    width: 400px;
+    height:400px;
+
+    margin-left: 50px;
+
+    grid-template:
+        ". unit-1 unit-2 ."
+        "unit-3 unit-4 unit-5 unit-6"
+        "unit-7 unit-8 unit-9 unit-10"
+        ". unit-11 unit-12 .";
+
+    transform: rotateY(0deg) rotate(45deg);
+}
+
+.core-system .unit-item {
+    position: relative;
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    background-color: aqua;
+    
+    border-radius: 5px;
+    border: 2px solid rgb(36, 11, 11);
+
+    font-family: monospace;
+    font-weight: bold;
+}
+
+.core-system > .unit-item > p {
+    position: relative;
+    transform: rotateY(0deg) rotate(-45deg);
+}
+
+.close-monitor {
+    height: 90%;
+    width: 30%;
+    margin: 50px;
+
+    padding: 10px;
+    background-color: rgb(29, 7, 7);
+
+    overflow-y:scroll;
+    scroll-behavior: smooth;
+    font-family:monospace;
+}
+
+/*test area*/
+
+#unit-4 {
+    animation: dead 1s linear infinite;
+}
+
+#unit-3, #unit-1, #unit-5, #unit-8 {
+    animation: flash-three 1s linear infinite;
+}
+
+#unit-7, #unit-11, #unit-9, #unit-6, #unit-2 {
+    animation: flash-two 1s linear infinite;
+}
+
+#unit-12, #unit-10 {
+    animation: flash-one 1s linear infinite;
 }
