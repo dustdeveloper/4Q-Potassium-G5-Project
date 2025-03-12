@@ -17,7 +17,7 @@
       transform: translateY(0px);
     }
     100% {
-      transform: translateY(-700px); /* The image width */
+      transform: translateY(-940px); /* The image width */
     }
   }
 
@@ -39,14 +39,15 @@ p {
     text-shadow: 0 0 5px;
 }
 
-.panel img {
+.panel .image {
     z-index: 1000;
     position: absolute;
+    background-image: url('../assets/images/scanline.png');
     pointer-events: none; /* Allows clicking through */
 
-    height: 300%;
+    height: 1000px;
     width: 100%;
-    opacity: 0.3;
+    opacity: 0.5;
 
     animation: slideup 10s linear infinite;
 }
@@ -107,7 +108,7 @@ p {
 }
 
 .aesthetic {
-    height: 70px;
+    height: 90%;
     width: 250px;
 
     display: flex;
