@@ -141,7 +141,7 @@ p, h1, h3, h4 {
 .panel .image {
     z-index: 1000;
     position: absolute;
-    background-image: url('../assets/images/scanline.png');
+    background-image: url('../images/scanline.png');
     pointer-events: none; /* Allows clicking through */
 
     height: 1000px;
