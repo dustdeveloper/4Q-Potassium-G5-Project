@@ -9,7 +9,7 @@ class StateMachine {
     constructor(states=null) {
         if (!states) {
             console.warn("No states have been set, beware! Use set_state_dict() to set states.");
-            return;
+            return false;
         };
 
         this.set_state_dict(states)

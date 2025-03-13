@@ -35,7 +35,7 @@
         transform: translate(0px, 100%);
     }
     80% {
-        transform: translate(0px, 100%);
+        transform: translate(0px, 100%) rotate(-20deg);
       }
     100% {
         transform: translate(0px, -90%) rotate(4deg);
@@ -478,7 +478,7 @@ button {
 
 /*animations required to start results*/
 
-/*
+
 .panel {
     animation: fade-to-black 8s linear;
     opacity: 0;
@@ -502,7 +502,7 @@ button {
     animation: fade-to-black 5s linear;
 }
 
-*/
+
 
 /*example animations for notif*/
 
