@@ -49,7 +49,7 @@ const TEMPLATE_UNIT = {
         _max_power_in: 0,         // -
     },
 
-    NORMAL: state_machine => {
+    NORMAL: function() {
         console.log("im in a state machine!", state_machine)
         console.log(state_machine.get_value_table())
     },
@@ -68,7 +68,13 @@ const TEMPLATE_UNIT = {
 }
 
 for (let i = 0; i < 12; i++) {
-    system_array[i] = new StateMachine(TEMPLATE_UNIT, "NORMAL");
+    // let copy = {};
+    // for(var key in TEMPLATE_UNIT)
+    // {
+    //     copy[key] = TEMPLATE_UNIT[key];
+    // }
+
+    system_array[i] = new StateMachine(structuredClone(TEMPLATE_UNIT), "NORMAL");
 }
 
 system_array[0].set_value("destroyed", true);
@@ -79,3 +85,13 @@ for (let i = 0; i < 12; i++) {
 function trigger(n){
     console.log("clicked on ",n)
 }
+
+// unit interval
+//setInterval(event => {
+//    console.log("wow!")
+//}, 50) // 20 ticks a second
+
+// observer interval
+//setInterval(event => {
+//    console.log("wow!")
+//}, 1000)
