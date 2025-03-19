@@ -5,6 +5,7 @@ class StateMachine {
     // state machine that moves between states
     #states = {};
     #current_state = null;
+    #tick_count = 0;
 
     constructor(states=null, default_state=null) {
         if (!states) {
@@ -21,6 +22,20 @@ class StateMachine {
         console.warn("No default state used. Manually use set_state() to start the state machine.");
         return true;
     };
+
+    tick() {
+        if (!this.#current_state) {
+            return false;
+        }
+
+        this.change_state(this.#current_state);
+        this.#tick_count++;
+        if (this.#tick_count >= 20) {
+            this.#tick_count = 0;
+        };
+        
+        return true;
+    }
 
     set_state(name, state_function) {
         // sets a new state
