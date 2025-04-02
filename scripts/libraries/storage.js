@@ -9,7 +9,7 @@ class StorageInterface {
 
     static get_local_item(item_name) {
         if (_is_outdated()) {
-            return false;
+            return null;
         };
 
         return localStorage.getItem(item_name);
@@ -17,7 +17,7 @@ class StorageInterface {
 
     static set_local_item(item_name, value) {
         if (_is_outdated()) {
-            return false;
+            return null;
         };
 
         localStorage.setItem(item_name, value);
@@ -26,7 +26,7 @@ class StorageInterface {
 
     static remove_local_item(item_name) {
         if (_is_outdated()) {
-            return false;
+            return null;
         };
 
         localStorage.removeItem(item_name);
@@ -35,7 +35,7 @@ class StorageInterface {
 
     static clear() {
         if (_is_outdated()) {
-            return false;
+            return null;
         };
 
         localStorage.clear();
