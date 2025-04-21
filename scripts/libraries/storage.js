@@ -1,36 +1,91 @@
 // storage implementation
 
-class StorageClass {
+class Local {
     constructor() {};
 
     static _is_outdated() {
         return typeof(Storage) == "undefined";
     };
 
-    static get_local_item(item_name) {
-        if (StorageClass._is_outdated()) { return null; };
+    static get(item_name, is_JSON) {
+        if (Local._is_outdated()) { return null; };
 
-        return localStorage.getItem(item_name);
+        let item = Localtorage.getItem(item_name);
+
+        if (is_JSON) {
+            item = JSON.parse(item);
+        };
+
+        return item;
     };
 
-    static set_local_item(item_name, value) {
-        if (StorageClass._is_outdated()) { return null; };
+    static set(item_name, value, is_JSON) {
+        if (Local._is_outdated()) { return null; };
 
-        localStorage.setItem(item_name, value);
+        let item = value;
+
+        if (is_JSON) {
+            item = JSON.stringify(value);
+        };
+
+        Localtorage.setItem(item_name, value);
         return true;
     };
 
-    static remove_local_item(item_name) {
-        if (StorageClass._is_outdated()) { return null; };
+    static remove(item_name) {
+        if (Local._is_outdated()) { return null; };
 
-        localStorage.removeItem(item_name);
+        Localtorage.removeItem(item_name);
         return true;
     };
 
     static clear() {
-        if (StorageClass._is_outdated()) { return null; };
+        if (Local._is_outdated()) { return null; };
 
-        localStorage.clear();
+        Localtorage.clear();
+        return true;
+    };
+}
+
+class Session {
+    constructor() {};
+
+    static get(item_name, is_JSON) {
+        if (Local._is_outdated()) { return null; };
+
+        let item = sessionStorage.getItem(item_name);
+
+        if (is_JSON) {
+            item = JSON.parse(item);
+        };
+
+        return item;
+    };
+
+    static set(item_name, value, is_JSON) {
+        if (Local._is_outdated()) { return null; };
+
+        let item = value;
+
+        if (is_JSON) {
+            item = JSON.stringify(value);
+        };
+
+        sessionStorage.setItem(item_name, value);
+        return true;
+    };
+
+    static remove(item_name) {
+        if (Local._is_outdated()) { return null; };
+
+        sessionStorage.removeItem(item_name);
+        return true;
+    };
+
+    static clear() {
+        if (Local._is_outdated()) { return null; };
+
+        sessionStorage.clear();
         return true;
     };
 }
