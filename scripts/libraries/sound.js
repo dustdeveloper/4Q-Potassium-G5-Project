@@ -30,7 +30,18 @@ class Sound {
     };
 
     wait_to_play() {
-        this.sound_is_playable.connect("sound", this.play);
+        console.log("Waiting...")
+        this.sound_is_playable.connect("sound", () => {
+            console.log("play complete")
+            this.play();
+            this.sound_is_playable.disconnect("sound");
+        });
+
+        if (this.#sound_ok) {
+            console.log("play complete (already)")
+            this.play();
+            this.sound_is_playable.disconnect("sound");
+        }
         return true;
     };
 

@@ -42,19 +42,19 @@
             </div>
         </div>
 
-        <!-- LOADER ZONE -->
+        <!-- LOADER ZONE -- SEMANTIC ZONE -->
 
-        <div class="loader" id="loader-top">
-            <div class="central central-top">
+        <section class="loader" id="loader-top">
+            <section class="central central-top">
                 <strong id="epilepsy">EPILEPSY WARNING</strong><br> This website contains strobing visuals that may trigger epileptic seizures. Please exit the website if you have these conditions.
-            </div>
-        </div>
-        <div class="loader" id="loader-bottom">
-            <div class="central central-bottom">
+            </section>
+        </section>
+        <section class="loader" id="loader-bottom">
+            <section class="central central-bottom">
                 <button onclick="trigger()">> Continue</button>
-            </div>
-        </div>
-        <div id="filler-wall"></div>
+            </section>
+        </section>
+        <section id="filler-wall"></section>
 
         <script>
             gsap.registerPlugin(TextPlugin);
@@ -68,26 +68,27 @@
                 "Test your coordination.",
             ]
 
+            let bg_music = new Sound("assets/audio/Utopian_Dream.mp3", 0);
+            bg_music.sound_is_playable.connect("playableEvent", event => {
+                console.log("sound is now playable!")
+            })
+
+            bg_music.playing.connect("playing", event => {
+                console.log("sound is playing!")
+            })
+
             function getRandom() {
                 const randomIndex = Math.floor(Math.random() * main_table.length);
                 return main_table[randomIndex];
             };
 
-            let bg_music = new Sound("assets/audio/Utopian_Dream.mp3", 0);
-            bg_music.sound_is_playable.connect("playableEvent", event => {
-                    console.log("sound is now playable!")
-            })
-            bg_music.playing.connect("playing", event => {
-                console.log("sound is playing!")
-            })
-
             function trigger() {
                 if (triggered) { return };
                 triggered = true;
 
-                if (!Local.get("hasAccepted")) {
-                    Local.set("hasAccepted", true);
-                }
+                //if (!Local.get("hasAccepted")) {
+                //    Local.set("hasAccepted", true);
+                //}
 
                 let loader_timeline = gsap.timeline();
 
@@ -113,7 +114,7 @@
                 bg_music.wait_to_play();
             }
 
-            if (Local.get("hasAccepted")) {trigger()}
+            // if (Local.get("hasAccepted")) {trigger()} breaks the sound system
 
             setInterval(() => {
                 bg_music.set_volume(volume.v) 
