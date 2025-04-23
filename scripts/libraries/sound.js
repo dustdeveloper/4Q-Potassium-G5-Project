@@ -12,6 +12,7 @@ class Sound {
     constructor(sound_location, volume) {
         this.#audio = new Audio(sound_location);
         this.set_volume(volume);
+        this.#sound_ok = false;
 
         this.#audio.load()
         this.#audio.addEventListener("canplaythrough", event => {
@@ -23,6 +24,13 @@ class Sound {
             this.stopped.fire();
         });
 
+        console.log("audio created")
+
+        return true;
+    };
+
+    wait_to_play() {
+        this.sound_is_playable.connect("sound", this.play);
         return true;
     };
 
