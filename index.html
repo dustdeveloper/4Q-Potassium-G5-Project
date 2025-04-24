@@ -96,7 +96,7 @@
                             alert("ooooooo placeholder things invalid ooooo");
                         }
 
-                        Local.set("lastUsername", usernameValue);
+                        Cookie.set("lastUsername", usernameValue);
                     });
                 </script>
             </section>
@@ -192,8 +192,8 @@
                 //}
 
                 let loader_timeline = gsap.timeline();
-                if (Local.get("lastUsername")) {
-                    welcome_string = "Welcome back, " + Local.get("lastUsername");
+                if (Cookie.get("lastUsername")) {
+                    welcome_string = "Welcome back, " + Cookie.get("lastUsername");
                 };
 
                 loader_timeline
