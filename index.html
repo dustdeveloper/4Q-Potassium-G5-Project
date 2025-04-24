@@ -5,6 +5,7 @@
 
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=M+PLUS+1+Code">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Special+Gothic+Expanded+One">
 
         <script src="scripts/libraries/GSAP/gsap.min.js"></script>
         <script src="scripts/libraries/GSAP/TextPlugin.min.js"></script>
@@ -19,7 +20,7 @@
         <div class="center-zone">
             <div class="navigation">
                 <h1 id="nav-text">CC_</h1>
-                <button id="nav-button">Play the Game</button>
+                <!--<button id="nav-button">Play the Game</button>-->
             </div>
 
             <h1 class="main-text" id="mn-plug-in">[ REDACTED ]</h1>
@@ -29,18 +30,123 @@
             <div class="description-container">
                 <div id="left-container">
                     <h1>ABOUT THIS GAME</h1>
-                    &nbsp;&nbsp;Developed by [GROUP 5], Crashcode is a <strong>2-player management game</strong> where both coordinate in a spiral of observation and reaction.<br><br>
-                    &nbsp;&nbsp;Skills like teamwork and coordination play a part as both of you maintain a machine capable of thought.&nbsp;&nbsp;
+                    <div>
+                        &nbsp;&nbsp;Developed by [GROUP 5], Crashcode is a 2-player management game where both coordinate in a spiral of observation and reaction.<br><br>
+                        &nbsp;&nbsp;Skills like teamwork and coordination play a part as both of you maintain a machine capable of thought.&nbsp;&nbsp;
+                    </div>
                 </div>
                 <div id="right-container">
                     <h1>SUMMARY</h1>
-                    <div>
+                    <div id="summary">
                         &nbsp;&nbsp;You both are instructor and trainee, sent to a key base facility north of headquarters. Your mission is to maintain the computational systems, nicknamed "the machines that think".<br><br>
                         &nbsp;&nbsp; It's an otherwise normal, and possibly peaceful job, given that these systems are old, but a recent breach far south of the base attempts to jeopradize everything. 
+                    </div>
+                    <div id="button-override">
+                        <button onclick="startGameProcedure()">Start Game</button>
+                        <button>Local Leaderboard</button>
+                        <button>Settings</button>
+                        <button>Game Document</button>
                     </div>
                 </div>
             </div>
         </div>
+        <section id="play-cover">
+            <section id="play-section">
+                <h1>&block;&block;&block;&block;&block;&block; Game Parameters</h1>
+                <form id="the-form">
+                    <label for="username">Username</label><br>
+                    <input type="text" name="username" pattern="[A-Za-z0-9]+" title="Only letters and numbers are allowed" required><br>
+                    <label for="role">Role</label><br>
+                    <div><input type="button" class="form-button" id="button-left" value="Instructor" onclick="setDifficultyValue(false)"><input type="button" class="form-button" id="button-right" value="Trainee" onclick="setDifficultyValue(true)"></div><br>
+
+                    <label id="difficulty-selector" for="difficulty">Difficulty</label><br>
+                    <div id="difficulty-selection"><input type="button" class="form-button" id="button-left" value="Easy"><input type="button" class="form-button" id="button-center" value="Medium"><input type="button" class="form-button" id="button-right" value="Hard"></div><br>
+                    <input type="submit" onsubmit="validateAndRun(); return false;" value="Start Game" id="submit-button">
+                </form>
+                <div>
+                    <h3>REGULATIONS</h3>
+                    <ul>
+                        <li><strong>2</strong> players are <strong>required.</strong></li>
+                        <li><strong>DO NOT</strong> view the other player's screen.</li>
+                        <li>Communicate <strong>VERBALLY</strong>.</li>
+                    </ul>
+                </div>
+
+                <script>
+                    let use_difficulty = false;
+                    function setDifficultyValue(val) {
+                        use_difficulty = val;
+                        
+                        if (use_difficulty) {
+                            gsap.to("#difficulty-selection", {opacity: 1, duration: 0.2});
+                        } else {
+                            gsap.to("#difficulty-selection", {opacity: 0.2, duration: 0.2});
+                        }
+                    }
+                    
+                    document.getElementById("the-form").addEventListener("submit", (event) => {
+                        event.preventDefault(); // Prevent form submission
+                        
+                        let usernameInput = document.querySelector("input[name='username']");
+                        let usernameValue = usernameInput.value;
+
+                        let isValid = /^[A-Za-z0-9]+$/.test(usernameValue);
+
+                        if (!isValid) {
+                            alert("ooooooo placeholder things invalid ooooo");
+                        }
+
+                        Local.set("lastUsername", usernameValue);
+                    });
+                </script>
+            </section>
+        </section>
+
+        <script>
+
+            function startGameProcedure() {
+
+                let muffleFilter = bg_music.audioContext.createBiquadFilter();
+                muffleFilter.type = "lowpass";
+                muffleFilter.frequency.value = 1; // Initial frequency value
+                bg_music.add_filter(muffleFilter);
+
+                let muffleFilter2 = bg_music.audioContext.createBiquadFilter();
+                muffleFilter2.type = "lowpass";
+                muffleFilter2.frequency.value = 1; // Initial frequency value
+                bg_music.add_filter(muffleFilter2);
+
+                let muffleFilter3 = bg_music.audioContext.createBiquadFilter();
+                muffleFilter3.type = "lowpass";
+                muffleFilter3.frequency.value = 1; // Initial frequency value
+                bg_music.add_filter(muffleFilter3);
+
+                let muffleFilter4 = bg_music.audioContext.createBiquadFilter();
+                muffleFilter4.type = "lowpass";
+                muffleFilter4.frequency.value = 1; // Initial frequency value
+                bg_music.add_filter(muffleFilter4);
+
+                let pro_timeline = gsap.timeline();
+                
+                pro_timeline
+                    .to(volume, {v:0, duration: 0, ease: "power1.inOut"}, 0)
+                    .to("#play-cover", {right: 0, backgroundColor: "rgb(0,0,0)", duration: 0}, 0)
+                    .to("#play-cover", {backgroundColor: "rgb(255,255,255)", duration: 0}, 2)
+                    
+                    .to(muffleFilter4.frequency, {value: 1000, duration: 10, ease: "power1.inOut"}, 0) // Animate frequency
+                    .to(muffleFilter3.frequency, {value: 740, duration: 10, ease: "power1.inOut"}, 0) // Animate frequency
+                    .to(muffleFilter2.frequency, {value: 500, duration: 10, ease: "power1.inOut"}, 0) // Animate frequency
+                    .to(muffleFilter.frequency, {value: 140, duration: 10, ease: "power1.inOut"}, 0) // Animate frequency
+
+                    .call(() => {
+                        bg_music.set_time(25.6);
+
+                        // find and autoset the fields
+                    }, null, 2)
+                    .from("#play-section", {opacity: 0, duration: 0.5, ease: "power1.out"}, 2)
+                    .to(volume, {v:0.3, duration: 1, ease: "power1.inOut"}, 2)
+            }
+        </script>
 
         <!-- LOADER ZONE -- SEMANTIC ZONE -->
 
@@ -68,14 +174,7 @@
                 "Test your coordination.",
             ]
 
-            let bg_music = new Sound("assets/audio/Utopian_Dream.mp3", 0);
-            bg_music.sound_is_playable.connect("playableEvent", event => {
-                console.log("sound is now playable!")
-            })
-
-            bg_music.playing.connect("playing", event => {
-                console.log("sound is playing!")
-            })
+            let bg_music = new Track("assets/audio/Utopian_Dream.mp3", 0);
 
             function getRandom() {
                 const randomIndex = Math.floor(Math.random() * main_table.length);
@@ -86,17 +185,22 @@
                 if (triggered) { return };
                 triggered = true;
 
+                let welcome_string = "Enjoy your stay.";
+
                 //if (!Local.get("hasAccepted")) {
                 //    Local.set("hasAccepted", true);
                 //}
 
                 let loader_timeline = gsap.timeline();
+                if (Local.get("lastUsername")) {
+                    welcome_string = "Welcome back, " + Local.get("lastUsername");
+                };
 
                 loader_timeline
                     .to(".central-top", {borderColor: "rgba(255,0,0,0)", duration: 3, ease: "power1.inOut"}, 0)
-                    .to(".central", {text: "Have a nice stay.", duration: 1, ease: "power1.inOut"}, 0)
+                    .to(".central", {text: welcome_string, duration: 0.5, ease: "power1.inOut"}, 0)
                     .to(".central", {color: "rgba(255,0,0,0)", duration: 2.5, ease: "power1.inOut"}, 0)
-                    .to(volume, {v:0.1, duration: 2, ease: "power1.in"}, 0)
+                    .to(volume, {v:0.3, duration: 2, ease: "power1.in"}, 0)
 
                     .to("#loader-top", {y: "-100%", duration: 2, ease: "power1.out"}, 3.5)
                     .to("#loader-bottom", {y: "100%", duration: 2, ease: "power1.out"}, 3.5)
@@ -108,10 +212,10 @@
                         document.getElementById("loader-bottom").remove();
                         document.getElementById("filler-wall").remove();
                     }, null, 5.5)
-                    .to("html, body", {overflow: "auto", duration: 2, ease: "power1.inOut"}, 5.5)
-                    .to("#mn-plug-in", {text: getRandom(), duration: 1, ease: "power1.outIn"}, 5.5)
+                    .to("html, body", {overflowX: "auto", duration: 2, ease: "power1.inOut"}, 5.5)
+                    .to("#mn-plug-in", {text: getRandom(), duration: 1, ease: "power1.inOut"}, 5.5)
             
-                bg_music.wait_to_play();
+                bg_music.play();
             }
 
             // if (Local.get("hasAccepted")) {trigger()} breaks the sound system

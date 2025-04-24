@@ -1,4 +1,4 @@
-html, body, h1 {
+html, body, h1, h3 {
     margin: 0;
     padding: 0;
     overflow: hidden;
@@ -8,7 +8,7 @@ body {
     background-color: black;
 }
 
-button {
+button, input {
 	background: none;
 	color: inherit;
 	border: none;
@@ -51,9 +51,8 @@ button {
 
 .central.central-top {
     border-bottom: 0;
-    position: absolute;
-    
-    top: 100%;
+    position: fixed;
+    top: 50%;
     left: 50%;
     transform: translate(-50%, -100%);
 }
@@ -64,7 +63,7 @@ button {
 }
 
 #filler-wall {
-    position: absolute;
+    position: fixed;
     width: 200%;
     height: 100vh;
     top: 0;
@@ -202,22 +201,136 @@ button {
 }
 
 #left-container {
-    flex: 3;
-}
-#right-container {
-    flex: 7;
-    display: flex;
-
-    flex-direction: column;
-}
-
-#right-container > h1 {
-    flex: 0.8;
-}
-
-#right-container > div {
     flex: 5;
-    width: 45%;
+    display: flex;
+}
+#left-container > h1 {
+    flex: 1;
+    border-right: solid rgb(255, 255, 255);
+}
+#left-container > div {
+    flex: 5;
+
+    padding-left: 0.8em;
+    margin: 1%;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+#right-container {
+    flex: 8;
+    display: flex;
+}
+#right-container > h1 {
+    flex: 1;
+}
+#button-override {
+    flex: 2;
+
+    margin: 1%;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+#summary {
+    flex: 5;
+
+    padding-left: 1em;
+    padding-right: 1em;
+    margin: 1%;
+    margin-top: 0;
+    margin-bottom: 0;
+
+    border-left: solid rgb(255, 255, 255);
+    border-right: solid rgb(255, 255, 255);
+}
+
+#button-override > button {
+    width: 100%;
+    margin-bottom: 0.5em;
+    padding: 0.2em;
+
+    text-align: center;
+    border: 2px solid rgb(255, 255, 255);
+    border-radius: 5px;
+
+    font-size: 1em;
+    font-weight: 600;
+}
+
+#play-cover {
+    position: fixed;
+    height: 100vh;
+    width: 100%;
+    right: -100%;
+
+    background-color: rgb(255, 255, 255);
+    opacity: 1;
+}
+
+#play-section {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+
+    height: 100vh;
+    width: 30%;
+    opacity: 1;
+
+    background-color: rgb(0,0,0);
+}
+#play-section > * {
+    color: rgb(255,255,255);
+    mix-blend-mode: difference;
+}
+#play-section > h1 {
+    flex: 1;
+    width: 400%;
+
+    font-size: 5em;
+
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    font-family: 'Special Gothic Expanded One', 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+#the-form {
+    flex: 5;
+    width: 85%;
+
+    padding-left: 5%;
+    font-family: 'IBM Plex Sans', 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+#the-form > * {
+    flex: 5;
+    width: 100%;
+}
+
+#the-form > input {
+    border:rgb(255, 255, 255) solid 1px;
+    border-radius: 5px;
+}
+
+#the-form > div {
+    display: flex;
+}
+
+.form-button {
+    flex: 5;
+
+    border:rgb(255, 255, 255) solid 1px;
+}
+
+#button-left {
+    border-radius: 5px 0 0 5px;
+}
+#button-right {
+    border-radius: 0 5px 5px 0;
+}
+
+#play-section > div {
+    flex: 1;
+    padding-left: 5%;
+
+    font-family: 'IBM Plex Sans', 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 
 img {
