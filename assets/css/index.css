@@ -344,3 +344,7 @@ img {
 
     background-color: rgb(255, 255, 255);
 }
+
+.key-indicator {
+    width: 1em;
+}
