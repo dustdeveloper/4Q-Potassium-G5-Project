@@ -164,11 +164,18 @@ function get_session_data() {
 
     let data = Session.get("parameters", true);
     if (!data) {
-        add_to("- No session data active! Reusing data...", "left");
+        add_to("- No session data active!", "left");
         add_to("-", "right");
 
+        data = {
+            date: new Date().toISOString(),
+            time: new Date().getTime(),
 
+            username: "guest", // replace with last user's name
+            difficulty: 0.25,
+        }
     }
+    
 
     complete_signal.fire();
 }
