@@ -3,6 +3,8 @@ var intro_timeline = gsap.timeline();
 var complete_signal = new Signal();
 var intro_complete = false;
 
+var data;
+
 function add_to(text, side) {
     let new_paragraph = document.createElement("p");
     new_paragraph.textContent = text;
@@ -77,11 +79,11 @@ function intro_modal() {
     let modal = new_modal().children[0];
     let input = new Input();
 
-    gsap.to(modal, {width: "fit-content", height: "fit-content",left: "50%", top: "70%", fontFamily: "Inconsolata", textAlign: "center", duration: 0});
+    gsap.to(modal, {width: "fit-content", height: "fit-content",left: "50%", top: "70%", fontFamily: "Inconsolata", textAlign: "center", backgroundColor: "rgba(0,0,0,0)", duration: 0});
     
     let title = append_new_element("h3", modal, "","", {margin: 0});
     let subtitle = append_new_element("h4", modal, "","", {margin: "-2%", fontWeight: "normal"});
-    title.innerHTML = "KEYBOARD MODULE CHECK";
+    title.innerHTML = "--- KEYBOARD MODULE CHECK ---";
     subtitle.innerHTML = "hold down the keys for 5 seconds.";
 
     let container = append_new_element("div", modal, "","", {margin: 0, display: "flex", justifyContent: "space-around", alignItems: "center"});
@@ -153,16 +155,47 @@ function intro_modal() {
     return true;
 }
 
+function move_session_data() {
+    complete_signal.connect("listener", () => {
+        complete_signal.disconnect("listener");
+        add_to("Registering systems...", "left");
+        add_to("[ OK ]", "right");
+
+
+        // next function
+    });
+
+    let final_data = Local.get("finalData", true);
+    console.log(final_data);
+
+    if (!typeof(final_data) == "object" || final_data == null) {
+        final_data = {};
+    }
+
+    final_data[data.date] = {
+        date: data.date,
+        time: data.time,
+
+        username: data.username,
+        finish_time: "DNF",
+    }
+
+    Local.set("finalData", final_data, true);
+
+    complete_signal.fire();
+}
+
 function get_session_data() {
     complete_signal.connect("listener", () => {
         complete_signal.disconnect("listener");
         add_to("Moving session data...", "left");
         add_to("[ OK ]", "right");
 
-        // next function
+
+        move_session_data();
     });
 
-    let data = Session.get("parameters", true);
+    data = Session.get("parameters", true);
     if (!data) {
         add_to("- No session data active!", "left");
         add_to("-", "right");
@@ -175,7 +208,6 @@ function get_session_data() {
             difficulty: 0.25,
         }
     }
-    
 
     complete_signal.fire();
 }

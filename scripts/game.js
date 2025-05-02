@@ -70,107 +70,107 @@ function template_unit_generate(identifier) {
     }
 
     unit.NORMAL = (state_machine, tick) => {
-        // // !  No unit_health implementation added. Please do in next revision
-        // // !  Clamp everything in the next revision
+        // !  No unit_health implementation added. Please do in next revision
+        // !  Clamp everything in the next revision
 
-        // // setting coolant amount rate
-        // state_machine.set_value("_coolant_amount_rate", 
-        //     clamp((state_machine.get_value("coolant_in_flow") + state_machine.get_value("coolant_out_flow")).toFixed(2), -1, 1)
-        // );
+        // setting coolant amount rate
+        state_machine.set_value("_coolant_amount_rate", 
+            clamp((state_machine.get_value("coolant_in_flow") + state_machine.get_value("coolant_out_flow")).toFixed(2), -1, 1)
+        );
 
-        // // change coolant temperatures based on amount and processor temperatures
-        // // ? the coldest that the coolant can get is -600 kelvin
-        // // ? the coldest that the processor can get is -200 kelvin
+        // change coolant temperatures based on amount and processor temperatures
+        // ? the coldest that the coolant can get is -600 kelvin
+        // ? the coldest that the processor can get is -200 kelvin
 
-        // // ? temporary fix - set temperature rates for processor and coolant
+        // ? temporary fix - set temperature rates for processor and coolant
 
-        // // check if the coolant is stagnant 
-        // if (state_machine.get_value("coolant_in_flow") < 1 || state_machine.get_value("coolant_out_flow") > -1) {
-        //     // * temporary placeholder
-        //     state_machine.set_value("_coolant_temp_rate", 
-        //         0.05
-        //     );
-        // } else {
-        //     // * temporary placeholder
-        //     if (state_machine.get_value("coolant_temperature") > -30) {
-        //         state_machine.set_value("_coolant_temp_rate", 
-        //             -0.5
-        //         );
-        //         return;
-        //     };
-        //     state_machine.set_value("_coolant_temp_rate", 
-        //         0
-        //     );
-        // };
+        // check if the coolant is stagnant 
+        if (state_machine.get_value("coolant_in_flow") < 1 || state_machine.get_value("coolant_out_flow") > -1) {
+            // * temporary placeholder
+            state_machine.set_value("_coolant_temp_rate", 
+                0.05
+            );
+        } else {
+            // * temporary placeholder
+            if (state_machine.get_value("coolant_temperature") > -30) {
+                state_machine.set_value("_coolant_temp_rate", 
+                    -0.5
+                );
+                return;
+            };
+            state_machine.set_value("_coolant_temp_rate", 
+                0
+            );
+        };
 
-        // state_machine.set_value("_processor_temp_rate",
-        //     state_machine.get_value("coolant_temperature")/1000
-        // )
+        state_machine.set_value("_processor_temp_rate",
+            state_machine.get_value("coolant_temperature")/1000
+        )
         
 
-        // // chamber pressure processing
-        // // check if coolant amount is over 250 liters.
-        // // if over, count the excess and plug it into a exponential func and set it on _chamber_pressure_rate
+        // chamber pressure processing
+        // check if coolant amount is over 250 liters.
+        // if over, count the excess and plug it into a exponential func and set it on _chamber_pressure_rate
         
-        // if (state_machine.get_value("coolant_amount") > 250) {
-        //     let excess = state_machine.get_value("coolant_amount") - 250
-        //     state_machine.set_value("_chamber_pressure_rate",
-        //         parseFloat((0.1*(Math.pow(1.01, excess - 10) - 1)).toFixed(2)) // * make a more realistic pressure gen
-        //     );
+        if (state_machine.get_value("coolant_amount") > 250) {
+            let excess = state_machine.get_value("coolant_amount") - 250
+            state_machine.set_value("_chamber_pressure_rate",
+                parseFloat((0.1*(Math.pow(1.01, excess - 10) - 1)).toFixed(2)) // * make a more realistic pressure gen
+            );
 
-        // } else {
-        //     state_machine.set_value("_chamber_pressure_rate", 0);
-        // };
+        } else {
+            state_machine.set_value("_chamber_pressure_rate", 0);
+        };
 
-        // // updating coolant amount
-        // state_machine.set_value("coolant_amount",
-        //     parseFloat(state_machine.get_value("coolant_amount") + state_machine.get_value("_coolant_amount_rate"))
-        // );
+        // updating coolant amount
+        state_machine.set_value("coolant_amount",
+            parseFloat(state_machine.get_value("coolant_amount") + state_machine.get_value("_coolant_amount_rate"))
+        );
 
-        // // updating processor temperatures
-        // state_machine.set_value("processor_temperature",
-        //     clamp(state_machine.get_value("processor_temperature") + state_machine.get_value("_processor_temp_rate"), -200, 300)
-        // );
+        // updating processor temperatures
+        state_machine.set_value("processor_temperature",
+            clamp(state_machine.get_value("processor_temperature") + state_machine.get_value("_processor_temp_rate"), -200, 300)
+        );
 
-        // // updating coolant temperatures
-        // state_machine.set_value("coolant_temperature",
-        //     state_machine.get_value("coolant_temperature") + state_machine.get_value("_coolant_temp_rate")
-        // );
+        // updating coolant temperatures
+        state_machine.set_value("coolant_temperature",
+            state_machine.get_value("coolant_temperature") + state_machine.get_value("_coolant_temp_rate")
+        );
 
-        // // updating chamber pressure
-        // state_machine.set_value("chamber_pressure",
-        //     clamp(state_machine.get_value("chamber_pressure") + state_machine.get_value("_chamber_pressure_rate"), 0, 40)
-        // );
+        // updating chamber pressure
+        state_machine.set_value("chamber_pressure",
+            clamp(state_machine.get_value("chamber_pressure") + state_machine.get_value("_chamber_pressure_rate"), 0, 40)
+        );
 
-        // ////console.log(state_machine.get_value("chamber_pressure"), " rate: ", state_machine.get_value("_chamber_pressure_rate"))
+        ////console.log(state_machine.get_value("chamber_pressure"), " rate: ", state_machine.get_value("_chamber_pressure_rate"))
 
-        // if (state_machine.get_value("chamber_pressure") >= 40) {
-        //     // chamber damage event
-        //     state_machine.set_value("chamber_damage", true);
-        //     state_machine.change_state("CHAMBER_DAMAGE");
-        // };
+        if (state_machine.get_value("chamber_pressure") >= 40) {
+            // chamber damage event
+            state_machine.set_value("chamber_damage", true);
+            state_machine.change_state("CHAMBER_DAMAGE");
+        };
 
-        // if (state_machine.get_value("processor_temperature") > 100) {
-        //     // fire event
-        //     state_machine.get_value("on_fire", true);
-        //     state_machine.set_value("chamber_damage", true);
-        //     state_machine.get_value("on_fire_signal").fire();
-        // };
+        if (state_machine.get_value("processor_temperature") > 100) {
+            // fire event
+            state_machine.get_value("on_fire", true);
+            state_machine.set_value("chamber_damage", true);
+            state_machine.get_value("on_fire_signal").fire();
+        };
 
-        // // ? "updates every half a second" section
-        // if (tick <= 10) {
-        //     return;
-        // };
+        // ? "updates every half a second" section
+        if (tick <= 10) {
+            return;
+        };
 
-        // if (state_machine.get_value("power_in") < 50) { // power_in implementation
-        //     return;
-        // };
+        if (state_machine.get_value("power_in") < 50) { // power_in implementation
+            return;
+        };
 
-        // let item = state_machine.get_value("queue")[0];
-        // if (typeof(item) == "function") {
-        //     item(state_machine);
-        //     state_machine.set_value("sync_level", state_machine.get_value("sync_level") + 1)
-        // };
+        let item = state_machine.get_value("queue")[0];
+        if (typeof(item) == "function") {
+            item(state_machine);
+            state_machine.set_value("sync_level", state_machine.get_value("sync_level") + 1)
+        };
     };
 
     unit.CHAMBER_DAMAGE = (state_machine, tick) => { // relies on chamber_damage variable
@@ -207,8 +207,6 @@ function trigger(n){
     console.log("clicked on ",n)
 }
 
-
-
 // unit interval
 setInterval(event => {
     for (let i = 0; i < 12; i++) {
@@ -233,4 +231,3 @@ setInterval(event => {
         console.log("updated! ", "unit-"+i)
     }
 }, 1000)
-

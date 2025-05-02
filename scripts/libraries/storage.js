@@ -23,12 +23,12 @@ class Local {
         if (Local._is_outdated()) { return null; };
 
         let item = value;
-
+        
         if (is_JSON) {
             item = JSON.stringify(value);
         };
 
-        localStorage.setItem(item_name, value);
+        localStorage.setItem(item_name, item);
         return true;
     };
 
@@ -65,10 +65,8 @@ class Session {
     static set(item_name, value, is_JSON = false) {
         if (Local._is_outdated()) { return null; };
 
-        let item = value;
-
         if (is_JSON) {
-            item = JSON.stringify(value);
+            value = JSON.stringify(value);
         };
 
         sessionStorage.setItem(item_name, value);
