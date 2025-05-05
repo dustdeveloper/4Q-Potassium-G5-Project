@@ -6,6 +6,7 @@ class StateMachine {
     #states = {};
     #current_state = null;
     #tick_count = 0;
+    state_changed = new Signal();
 
     constructor(states=null, default_state=null) {
         if (!states) {

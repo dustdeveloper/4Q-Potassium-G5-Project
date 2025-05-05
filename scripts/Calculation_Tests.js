@@ -1,0 +1,244 @@
+/*
+    TODO:
+        * note: finish normal first before continuing to other functions
+        Create processing function for all variables
+            'NORMAL'           normal processing
+            'CHAMBER_DAMAGE'   
+            'BURNT'             
+            'DESTROYED'        nothing happens, everything is dead
+        Cure to cancer
+        COMPLETE via items in queue - Random events (the game concept right there)
+*/
+
+/*
+    a tick happens every 1/20 times a second (50 milliseconds in interval).
+    so 25 liters a second would equate to 1.25 liters a tick
+*/
+
+/*
+    EXAMPLE ITEM
+    state_machine => {
+            -- edit variables from here
+        }
+*/
+
+// fixed // bug: TEMPLATE_UNIT is being referenced and not copied when passing as an argument
+
+
+
+
+
+//Variable Declaration
+var system_array = {};
+var variable_tick_array = {};
+var time = 0;
+
+const clamp = (num, min, max) => Math.min(Math.max(num, min), max) // Range Limit
+const addCSS = css => document.head.appendChild(document.createElement("style")).innerHTML=css;
+
+
+
+
+//Execution
+function template_unit_generate(identifier) //One Unit
+{
+    let unit = {};
+    
+    unit.variables = {
+        identifier: identifier,
+
+        on_fire: false,          // simple boolean variables
+        disconnected: false,     // -
+        chamber_damage: false,   // -
+        powered: false,
+
+        /*Check*/processor_temperature: 5,// processing temperature (in Degree Celcius)
+
+        /*Check*/chamber_pressure: 1,     // pressure (in atm)
+
+        /*Check*/coolant_temperature: -50, // temperature (in Degree Celcuius)
+        /*Check*/coolant_amount_max: 600, // maximum amount of coolat (in liters)
+        /*Check*/coolant_amount: 100,       // amount (in liters)
+        /*Check*/coolant_in_flow: 0.25,      // rate of flow (in liters per tick)
+        /*Check*/coolant_out_flow: -0.25,     // rate of flow (in liters per tick)
+
+        /*Check*/power_in: 0,             // amount of power (in kilowatts)
+        unit_health: 100,        // general health
+
+        sync_level: 0,           // synchronization level (must be matched with other units)
+        queue: [],                // items in queue to process
+
+        // rate of ascent/descent per tick [negative - down / positive - up]
+        // the underscore denotes that it is not accessible by normal means
+
+        //Pressure & Amount
+        /*Check*/_coolant_amount_rate: 0, 
+
+        //Health
+        _unit_health_rate: 0,
+
+        disconnected_signal: new Signal(),
+        destroyed_signal: new Signal(),
+        on_fire_signal: new Signal(),
+        stop_fire: new Signal(),
+    }
+
+    unit.NORMAL = (state_machine, tick) => 
+        {
+            //Calculations
+            //Coolant Amount
+            state_machine.set_value("_coolant_amount_rate", 
+                clamp((state_machine.get_value("coolant_in_flow") + state_machine.get_value("coolant_out_flow")).toFixed(2), -1, 1)
+            );
+
+            state_machine.set_value("coolant_amount",
+                clamp((state_machine.get_value("coolant_amount") + state_machine.get_value("_coolant_amount_rate")).toFixed(2), 0, state_machine.get_value("coolant_amount_max"))
+            );
+
+            //Chamber Pressure
+            state_machine.set_value("chamber_pressure",
+                clamp(((Math.cbrt(state_machine.get_value("coolant_amount")) * Math.cbrt(state_machine.get_value("coolant_amount")) * (9.81)) / (Math.cbrt(state_machine.get_value("coolant_amount_max")) * Math.cbrt(state_machine.get_value("coolant_amount_max")))).toFixed(2), 0, 9.81)
+            );
+            
+            //Coolant Temperature
+            state_machine.set_value("coolant_temperature",
+                clamp(((state_machine.get_value("coolant_amount") * state_machine.get_value("chamber_pressure")) / (62.07*0.08206)).toFixed(2), 0, 1155.5981)
+            );
+            
+            state_machine.set_value("processor_temperature",
+                clamp((state_machine.get_value("coolant_temperature") / 11.555981).toFixed(2), 0, 100)
+            );
+            
+            //Power
+            state_machine.set_value("power_in",
+                clamp(((state_machine.get_value("chamber_pressure") * state_machine.get_value("coolant_amount")) / time).toFixed(2), 0.01, 58860)
+            );
+
+            if (state_machine.get_value("chamber_pressure") >= 6) {
+                // chamber damage event
+                state_machine.set_value("chamber_damage", true);
+                state_machine.change_state("CHAMBER_DAMAGE");
+            };
+    
+            if (state_machine.get_value("processor_temperature") > 100) {
+                // fire event
+                state_machine.get_value("on_fire", true);
+                state_machine.set_value("chamber_damage", true);
+                state_machine.get_value("on_fire_signal").fire();
+            };
+
+            // ? "updates every half a second" section
+            if (tick <= 10) {
+                return;
+            };
+
+            if (state_machine.get_value("power_in") < 10) { // power_in implementation
+                state_machine.set_value("powered", false);
+                return;
+            };
+
+            state_machine.set_value("powered", true);
+
+            let item = state_machine.get_value("queue")[0];
+            if (item == null) { return };
+
+            for (let [key, value] of Object.entries(item)) {
+                state_machine.set_value(key, value);
+            };
+
+            state_machine.get_value("queue").shift();
+        };
+
+    unit.CHAMBER_DAMAGE = (state_machine, tick) => { // relies on chamber_damage variable
+    };
+
+    unit.BURNT = (state_machine, tick) => { // relies on finishing on_fire completion variable
+    };
+
+    unit.DESTROYED = (state_machine, tick) => { // relies on destroyed
+    };
+
+    return unit;
+}
+
+
+
+
+
+//Generate new statemachines for the units
+for (let i = 0; i < 12; i++) {
+    system_array[i] = new StateMachine(template_unit_generate(i+1), "NORMAL");
+
+    system_array[i].get_value("stop_fire").connect("fire_extinguished", event => {
+        if (!system_array[i].get_value("on_fire")) 
+            {return;};
+
+        console.log("Fire stopped!")
+        system_array[i].set_value("on_fire", false);
+        system_array[i].change_state("BURNT");
+    });
+}
+
+//Unit interval
+setInterval(event => {
+    for (let i = 0; i < 12; i++) 
+        {system_array[i].tick();}
+    time = time + 0.05;
+
+    let lookat = 0
+    // debug
+
+    for (let [key, value] of Object.entries(system_array[lookat].get_value_table())) {
+        let item = document.querySelector("#"+key);
+        if (!item) {
+            continue;
+        }
+        item.innerHTML = key+"&nbsp;&nbsp;&nbsp;&nbsp;"+value;
+    }
+}, 50) // 20 ticks a second
+
+
+// new queue event interval
+let queue_items = [
+    [   // variables for it to set to true
+        "disconnected",    
+        "chamber_damage",  
+    ],
+    {   // variables for it to edit
+        coolant_in_flow: [-1, 1],      // rate of flow (in liters per tick)
+        coolant_out_flow: [-1, 1],     // rate of flow (in liters per tick)
+    },
+    [   // random signals for it to fire
+        "disconnected_signal",
+        "destroyed_signal",
+        "on_fire_signal",
+        "stop_fire"
+    ]
+]
+
+setInterval(event => {
+    for (let [unit, sm] of Object.entries(system_array[lookat])) {
+        let queue_item
+        let item = queue_items[Math.floor(Math.random() * queue_items.length)];
+    }
+
+}, 100000)
+
+
+// //Observer interval
+//  setInterval(event => {
+//      // attach them to the panels
+//      for (let i = 1; i < 13; i++) {
+//          switch(system_array[i-1].get_state()) {
+//              case "NORMAL":
+//                  document.getElementById("unit-"+i).style.animation = "none";
+//              case "CHAMBER_DAMAGE":
+//                  document.getElementById("unit-"+i).style.animation = "flash-two 1s linear infinite";
+//              case "BURNT":
+//                  document.getElementById("unit-"+i).style.animation = "flash-three 1s linear infinite";
+//              case "DESTROYED":
+//                  document.getElementById("unit-"+i).style.animation = "dead 1s linear infinite";
+//          }
+//          console.log("updated! ", "unit-"+i)
+//      }
+//  }, 1000)
