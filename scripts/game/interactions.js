@@ -20,9 +20,10 @@
 // fixed // bug: TEMPLATE_UNIT is being referenced and not copied when passing as an argument
 
 //Variable Declaration
-var system_array = {};
-var variable_tick_array = {};
+var system_objects = {};
+var variable_tick_objects = {};
 var time = 0;
+var data = {};
 
 const clamp = (num, min, max) => Math.min(Math.max(num, min), max) // Range Limit
 
@@ -39,27 +40,24 @@ function template_unit_generate(identifier) //One Unit
         chamber_damage: false,   // -
         powered: false,
 
-        /*Check*/processor_temperature: 5,// processing temperature (in Degree Celcius)
+        processor_temperature: 5,// processing temperature (in Degree Celcius)
 
-        /*Check*/chamber_pressure: 1,     // pressure (in atm)
+        chamber_pressure: 1,     // pressure (in atm)
 
-        /*Check*/coolant_temperature: -50, // temperature (in Degree Celcuius)
-        /*Check*/coolant_amount_max: 600, // maximum amount of coolat (in liters)
-        /*Check*/coolant_amount: 100,       // amount (in liters)
-        /*Check*/coolant_in_flow: 0.25,      // rate of flow (in liters per tick)
-        /*Check*/coolant_out_flow: -0.25,     // rate of flow (in liters per tick)
+        coolant_temperature: -50, // temperature (in Degree Celcuius)
+        coolant_amount_max: 600, // maximum amount of coolat (in liters)
+        coolant_amount: 100,       // amount (in liters)
+        coolant_in_flow: 0.25,      // rate of flow (in liters per tick)
+        coolant_out_flow: -0.25,     // rate of flow (in liters per tick)
 
-        /*Check*/power_in: 0,             // amount of power (in kilowatts)
-        unit_health: 100,        // general health
+        power_in: 0,             // amount of power (in kilowatts)
+        unit_health: 100,        // ! NOT DONE general health
 
-        sync_level: 0,           // synchronization level (must be matched with other units)
-        queue: [],                // items in queue to process
-
-        // rate of ascent/descent per tick [negative - down / positive - up]
-        // the underscore denotes that it is not accessible by normal means
+        sync_level: 0,           // ! NOT DONE synchronization level (must be matched with other units)
+        queue: [],               // ! NOT DONE items in queue to process
 
         //Pressure & Amount
-        /*Check*/_coolant_amount_rate: 0, 
+        _coolant_amount_rate: 0, 
 
         //Health
         _unit_health_rate: 0,
@@ -98,10 +96,10 @@ function template_unit_generate(identifier) //One Unit
             
             //Power
             state_machine.set_value("power_in",
-                clamp(((state_machine.get_value("chamber_pressure") * state_machine.get_value("coolant_amount")) / time).toFixed(2), 0.01, 58860)
+                clamp(((state_machine.get_value("chamber_pressure") * state_machine.get_value("coolant_amount")) / (time / data.difficulty_index)).toFixed(2), 0.01, 58860)
             );
 
-            if (state_machine.get_value("chamber_pressure") >= 6) {
+            if (state_machine.get_value("chamber_pressure") >= 9) {
                 // chamber damage event
                 state_machine.set_value("chamber_damage", true);
                 state_machine.change_state("CHAMBER_DAMAGE");
@@ -151,80 +149,77 @@ function template_unit_generate(identifier) //One Unit
 
 //Generate new statemachines for the units
 for (let i = 0; i < 12; i++) {
-    system_array[i] = new StateMachine(template_unit_generate(i+1), "NORMAL");
+    system_objects[i] = new StateMachine(template_unit_generate(i+1), "NORMAL");
 
-    system_array[i].get_value("stop_fire").connect("fire_extinguished", _ => {
-        if (!system_array[i].get_value("on_fire")) {
+    system_objects[i].get_value("stop_fire").connect("fire_extinguished", _ => {
+        if (!system_objects[i].get_value("on_fire")) {
             return;
         };
 
         console.log("Fire stopped!")
-        system_array[i].set_value("on_fire", false);
-        system_array[i].change_state("BURNT");
+        system_objects[i].set_value("on_fire", false);
+        system_objects[i].change_state("BURNT");
     });
 }
+class Game {
+    constructor(){};
 
-//Unit interval
-setInterval(_ => {
-    for (let i = 0; i < 12; i++) {
-        system_array[i].tick();
-    };
-    time = time + 0.05;
-
-    let lookat = 0
-
-    // debugger
-    for (let [key, value] of Object.entries(system_array[lookat].get_value_table())) {
-        let item = document.querySelector("#"+key);
-        if (!item) {
-            continue;
-        };
-        item.innerHTML = key+"&nbsp;&nbsp;&nbsp;&nbsp;"+value;
-    };
-}, 50) // 20 ticks a second
-
-
-// new queue event interval
-let queue_items = [
-    [   // variables for it to set to true
-        "disconnected",    
-        "chamber_damage",  
-    ],
-    {   // variables for it to edit
-        coolant_in_flow: [-1, 1],      // rate of flow (in liters per tick)
-        coolant_out_flow: [-1, 1],     // rate of flow (in liters per tick)
-    },
-    [   // random signals for it to fire
-        "disconnected_signal",
-        "destroyed_signal",
-        "on_fire_signal",
-        "stop_fire"
-    ]
-]
-
-setInterval(_ => {
-    for (let [unit, sm] of Object.entries(system_array[lookat])) {
-        let queue_item = [];
-        let item = queue_items[Math.floor(Math.random() * queue_items.length)];
-        // not done yet...
+    static set_game_intervals(data) {
+        data = data;
+    
+        //Unit interval
+        setInterval(_ => {
+            for (let i = 0; i < 12; i++) {
+                system_objects[i].tick();
+            };
+            time = time + 0.05;
+    
+            let lookat = 0
+    
+            // debugger
+            for (let [key, value] of Object.entries(system_objects[lookat].get_value_table())) {
+                let item = document.querySelector("#"+key);
+                if (!item) {
+                    continue;
+                };
+                item.innerHTML = key+"&nbsp;&nbsp;&nbsp;&nbsp;"+value;
+            };
+        }, 50) // 20 ticks a second
+    
+        // new queue event interval
+        setInterval(_ => {
+            for (let [_, state_machine] of Object.entries(system_objects)) {
+                let queueable_objects = {   // variables for it to edit
+                    coolant_in_flow: 1,      // rate of flow (in liters per tick)
+                    coolant_out_flow: 1,     // rate of flow (in liters per tick)
+                };
+                
+                queueable_objects["coolant_in_flow"] = Number((Math.random() * (-1.3 - 1 + 1) + 1).toFixed(2))
+                queueable_objects["coolant_out_flow"] = Number(((Math.random() * (-2 - 0.3 + 1) + 1) * -1).toFixed(2))
+                // code that randomly selects the items within the queue_items array
+    
+                state_machine.get_value("queue").push(queueable_objects);
+            }
+        }, 2000)
+    
+    
+        // //Observer interval
+        //  setInterval(event => {
+        //      // attach them to the panels
+        //      for (let i = 1; i < 13; i++) {
+        //          switch(system_objects[i-1].get_state()) {
+        //              case "NORMAL":
+        //                  document.getElementById("unit-"+i).style.animation = "none";
+        //              case "CHAMBER_DAMAGE":
+        //                  document.getElementById("unit-"+i).style.animation = "flash-two 1s linear infinite";
+        //              case "BURNT":
+        //                  document.getElementById("unit-"+i).style.animation = "flash-three 1s linear infinite";
+        //              case "DESTROYED":
+        //                  document.getElementById("unit-"+i).style.animation = "dead 1s linear infinite";
+        //          }
+        //          console.log("updated! ", "unit-"+i)
+        //      }
+        //  }, 1000)
     }
-}, 100000)
-
-
-// //Observer interval
-//  setInterval(event => {
-//      // attach them to the panels
-//      for (let i = 1; i < 13; i++) {
-//          switch(system_array[i-1].get_state()) {
-//              case "NORMAL":
-//                  document.getElementById("unit-"+i).style.animation = "none";
-//              case "CHAMBER_DAMAGE":
-//                  document.getElementById("unit-"+i).style.animation = "flash-two 1s linear infinite";
-//              case "BURNT":
-//                  document.getElementById("unit-"+i).style.animation = "flash-three 1s linear infinite";
-//              case "DESTROYED":
-//                  document.getElementById("unit-"+i).style.animation = "dead 1s linear infinite";
-//          }
-//          console.log("updated! ", "unit-"+i)
-//      }
-//  }, 1000)
+    
+};

@@ -3,8 +3,6 @@ var intro_timeline = gsap.timeline();
 var complete_signal = new Signal();
 var intro_complete = false;
 
-var data;
-
 function add_to(text, side) {
     let new_paragraph = document.createElement("p");
     new_paragraph.textContent = text;
@@ -162,7 +160,7 @@ function move_session_data() {
         add_to("[ OK ]", "right");
 
 
-        // next function
+        start_game();
     });
 
     let final_data = Local.get("finalData", true);
@@ -178,6 +176,7 @@ function move_session_data() {
 
         username: data.username,
         finish_time: "DNF",
+        difficulty_index: data.difficulty_index
     }
 
     Local.set("finalData", final_data, true);
@@ -185,12 +184,23 @@ function move_session_data() {
     complete_signal.fire();
 }
 
+function start_game() {
+    complete_signal.connect("listener", () => {
+        complete_signal.destroy();
+        add_to("[ OK ]", "right");
+    });
+
+    Game.set_game_intervals(data);
+
+    complete_signal.fire();
+    setTimeout(_ => document.querySelector(".fixed-fullscreen").remove(), 2000)
+}
+
 function get_session_data() {
     complete_signal.connect("listener", () => {
         complete_signal.disconnect("listener");
         add_to("Moving session data...", "left");
         add_to("[ OK ]", "right");
-
 
         move_session_data();
     });
@@ -205,7 +215,7 @@ function get_session_data() {
             time: new Date().getTime(),
 
             username: "guest", // replace with last user's name
-            difficulty: 0.25,
+            difficulty_index: 700,
         }
     }
 
@@ -219,11 +229,6 @@ function interactive() {
     add_to("Checking module keyboard...", "left");
 
     intro_modal()
-
-    // // move data to localstorage
-    // add_to("Moving session data to LOCALSTORAGE..", "left");
-
-    // add_to("[ OK ]", "right");
 }
 
 intro_timeline
