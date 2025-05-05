@@ -7,12 +7,7 @@
             'BURNT'             
             'DESTROYED'        nothing happens, everything is dead
         Cure to cancer
-        COMPLETE via items in queue - Random events (the game concept right there)
-*/
-
-/*
-    a tick happens every 1/20 times a second (50 milliseconds in interval).
-    so 25 liters a second would equate to 1.25 liters a tick
+        via items in queue - Random events (the game concept right there)
 */
 
 /*
@@ -24,20 +19,12 @@
 
 // fixed // bug: TEMPLATE_UNIT is being referenced and not copied when passing as an argument
 
-
-
-
-
 //Variable Declaration
 var system_array = {};
 var variable_tick_array = {};
 var time = 0;
 
 const clamp = (num, min, max) => Math.min(Math.max(num, min), max) // Range Limit
-const addCSS = css => document.head.appendChild(document.createElement("style")).innerHTML=css;
-
-
-
 
 //Execution
 function template_unit_generate(identifier) //One Unit
@@ -162,16 +149,14 @@ function template_unit_generate(identifier) //One Unit
 }
 
 
-
-
-
 //Generate new statemachines for the units
 for (let i = 0; i < 12; i++) {
     system_array[i] = new StateMachine(template_unit_generate(i+1), "NORMAL");
 
-    system_array[i].get_value("stop_fire").connect("fire_extinguished", event => {
-        if (!system_array[i].get_value("on_fire")) 
-            {return;};
+    system_array[i].get_value("stop_fire").connect("fire_extinguished", _ => {
+        if (!system_array[i].get_value("on_fire")) {
+            return;
+        };
 
         console.log("Fire stopped!")
         system_array[i].set_value("on_fire", false);
@@ -180,21 +165,22 @@ for (let i = 0; i < 12; i++) {
 }
 
 //Unit interval
-setInterval(event => {
-    for (let i = 0; i < 12; i++) 
-        {system_array[i].tick();}
+setInterval(_ => {
+    for (let i = 0; i < 12; i++) {
+        system_array[i].tick();
+    };
     time = time + 0.05;
 
     let lookat = 0
-    // debug
 
+    // debugger
     for (let [key, value] of Object.entries(system_array[lookat].get_value_table())) {
         let item = document.querySelector("#"+key);
         if (!item) {
             continue;
-        }
+        };
         item.innerHTML = key+"&nbsp;&nbsp;&nbsp;&nbsp;"+value;
-    }
+    };
 }, 50) // 20 ticks a second
 
 
@@ -216,12 +202,12 @@ let queue_items = [
     ]
 ]
 
-setInterval(event => {
+setInterval(_ => {
     for (let [unit, sm] of Object.entries(system_array[lookat])) {
-        let queue_item
+        let queue_item = [];
         let item = queue_items[Math.floor(Math.random() * queue_items.length)];
+        // not done yet...
     }
-
 }, 100000)
 
 
