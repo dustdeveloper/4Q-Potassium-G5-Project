@@ -3,7 +3,7 @@ var intro_timeline = gsap.timeline();
 var complete_signal = new Signal();
 var intro_complete = false;
 
-var skip_all = true;
+var skip_all = false;
 
 function add_to(text, side) {
     let new_paragraph = document.createElement("p");
@@ -64,6 +64,76 @@ function append_new_element(type, parent, id="", typeclass="", style={}) {
     parent.appendChild(item);
 
     return item;
+}
+// 0-----------------------------------------------------------------------0
+
+function start_game() {
+    complete_signal.connect("listener", () => {
+        complete_signal.destroy();
+        add_to("[ OK ]", "right");
+    });
+
+    Game.set_game_intervals(data);
+
+    complete_signal.fire();
+    setTimeout(_ => document.querySelector(".fixed-fullscreen").remove(), 2000)
+}
+
+function move_session_data() {
+    complete_signal.connect("listener", () => {
+        complete_signal.disconnect("listener");
+        add_to("Registering systems...", "left");
+        add_to("[ OK ]", "right");
+
+
+        start_game();
+    });
+
+    let final_data = Local.get("finalData", true);
+    console.log(final_data);
+
+    if (!typeof(final_data) == "object" || final_data == null) {
+        final_data = {};
+    }
+
+    final_data[data.date] = {
+        date: data.date,
+        time: data.time,
+
+        username: data.username,
+        finish_time: "DNF",
+        difficulty_index: data.difficulty_index
+    }
+
+    Local.set("finalData", final_data, true);
+
+    complete_signal.fire();
+}
+
+function get_session_data() {
+    complete_signal.connect("listener", () => {
+        complete_signal.disconnect("listener");
+        add_to("Moving session data...", "left");
+        add_to("[ OK ]", "right");
+
+        move_session_data();
+    });
+
+    data = Session.get("parameters", true);
+    if (!data) {
+        add_to("- No session data active!", "left");
+        add_to("-", "right");
+
+        data = {
+            date: new Date().toISOString(),
+            time: new Date().getTime(),
+
+            username: "guest", // replace with last user's name
+            difficulty_index: 700,
+        }
+    }
+
+    complete_signal.fire();
 }
 
 function intro_modal() {
@@ -154,77 +224,6 @@ function intro_modal() {
 
     return true;
 }
-
-function move_session_data() {
-    complete_signal.connect("listener", () => {
-        complete_signal.disconnect("listener");
-        add_to("Registering systems...", "left");
-        add_to("[ OK ]", "right");
-
-
-        start_game();
-    });
-
-    let final_data = Local.get("finalData", true);
-    console.log(final_data);
-
-    if (!typeof(final_data) == "object" || final_data == null) {
-        final_data = {};
-    }
-
-    final_data[data.date] = {
-        date: data.date,
-        time: data.time,
-
-        username: data.username,
-        finish_time: "DNF",
-        difficulty_index: data.difficulty_index
-    }
-
-    Local.set("finalData", final_data, true);
-
-    complete_signal.fire();
-}
-
-function start_game() {
-    complete_signal.connect("listener", () => {
-        complete_signal.destroy();
-        add_to("[ OK ]", "right");
-    });
-
-    Game.set_game_intervals(data);
-
-    complete_signal.fire();
-    setTimeout(_ => document.querySelector(".fixed-fullscreen").remove(), 2000)
-}
-
-function get_session_data() {
-    complete_signal.connect("listener", () => {
-        complete_signal.disconnect("listener");
-        add_to("Moving session data...", "left");
-        add_to("[ OK ]", "right");
-
-        move_session_data();
-    });
-
-    data = Session.get("parameters", true);
-    if (!data) {
-        add_to("- No session data active!", "left");
-        add_to("-", "right");
-
-        data = {
-            date: new Date().toISOString(),
-            time: new Date().getTime(),
-
-            username: "guest", // replace with last user's name
-            difficulty_index: 700,
-        }
-    }
-
-    complete_signal.fire();
-}
-
-
 
 function interactive() {
     // open modal prompt for keyboard

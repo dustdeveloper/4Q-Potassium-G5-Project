@@ -146,23 +146,24 @@ function template_unit_generate(identifier) //One Unit
     return unit;
 }
 
-
-//Generate new statemachines for the units
-for (let i = 0; i < 12; i++) {
-    let visible_number = i+1
-    system_objects[i] = new StateMachine(template_unit_generate(visible_number), "NORMAL");
-
-    let element = document.querySelector("#u"+visible_number);
-    element.querySelector("h4").innerHTML = "UNIT "+ (visible_number < 10 ? '0' + visible_number : visible_number.toString())
-
-    element.addEventListener("click", _ => {
-        Observer.change_lookat(visible_number-1);
-    })
-}
 class Game {
     constructor(){};
 
     static set_game_intervals(data) {
+
+        //Generate new statemachines for the units
+        for (let i = 0; i < 12; i++) {
+            let visible_number = i+1
+            system_objects[i] = new StateMachine(template_unit_generate(visible_number), "NORMAL");
+
+            let element = document.querySelector("#u"+visible_number);
+            element.querySelector("h4").innerHTML = "UNIT "+ (visible_number < 10 ? '0' + visible_number : visible_number.toString())
+
+            element.addEventListener("click", _ => {
+                Observer.change_lookat(visible_number-1);
+            })
+        }
+        
         data = data;
     
         //Unit interval
@@ -188,25 +189,9 @@ class Game {
                 state_machine.get_value("queue").push(queueable_objects);
             }
         }, 1000)
+
+        
     
         Observer.start_now(system_objects);
-        // //Observer interval
-        //  setInterval(event => {
-        //      // attach them to the panels
-        //      for (let i = 1; i < 13; i++) {
-        //          switch(system_objects[i-1].get_state()) {
-        //              case "NORMAL":
-        //                  document.getElementById("unit-"+i).style.animation = "none";
-        //              case "CHAMBER_DAMAGE":
-        //                  document.getElementById("unit-"+i).style.animation = "flash-two 1s linear infinite";
-        //              case "BURNT":
-        //                  document.getElementById("unit-"+i).style.animation = "flash-three 1s linear infinite";
-        //              case "DESTROYED":
-        //                  document.getElementById("unit-"+i).style.animation = "dead 1s linear infinite";
-        //          }
-        //          console.log("updated! ", "unit-"+i)
-        //      }
-        //  }, 1000)
     }
-    
 };
