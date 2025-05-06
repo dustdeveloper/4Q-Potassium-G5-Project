@@ -149,17 +149,15 @@ function template_unit_generate(identifier) //One Unit
 
 //Generate new statemachines for the units
 for (let i = 0; i < 12; i++) {
-    system_objects[i] = new StateMachine(template_unit_generate(i+1), "NORMAL");
+    let visible_number = i+1
+    system_objects[i] = new StateMachine(template_unit_generate(visible_number), "NORMAL");
 
-    system_objects[i].get_value("stop_fire").connect("fire_extinguished", _ => {
-        if (!system_objects[i].get_value("on_fire")) {
-            return;
-        };
+    let element = document.querySelector("#u"+visible_number);
+    element.querySelector("h4").innerHTML = "UNIT "+ (visible_number < 10 ? '0' + visible_number : visible_number.toString())
 
-        console.log("Fire stopped!")
-        system_objects[i].set_value("on_fire", false);
-        system_objects[i].change_state("BURNT");
-    });
+    element.addEventListener("click", _ => {
+        Observer.change_lookat(visible_number-1);
+    })
 }
 class Game {
     constructor(){};
@@ -173,17 +171,6 @@ class Game {
                 system_objects[i].tick();
             };
             time = time + 0.05;
-    
-            let lookat = 0
-    
-            // debugger
-            for (let [key, value] of Object.entries(system_objects[lookat].get_value_table())) {
-                let item = document.querySelector("#"+key);
-                if (!item) {
-                    continue;
-                };
-                item.innerHTML = key+"&nbsp;&nbsp;&nbsp;&nbsp;"+value;
-            };
         }, 50) // 20 ticks a second
     
         // new queue event interval
@@ -194,15 +181,15 @@ class Game {
                     coolant_out_flow: 1,     // rate of flow (in liters per tick)
                 };
                 
-                queueable_objects["coolant_in_flow"] = Number((Math.random() * (-1.3 - 1 + 1) + 1).toFixed(2))
+                queueable_objects["coolant_in_flow"] = Number((Math.random() * (-1 - 1 + 1) + 1).toFixed(2))
                 queueable_objects["coolant_out_flow"] = Number(((Math.random() * (-2 - 0.3 + 1) + 1) * -1).toFixed(2))
                 // code that randomly selects the items within the queue_items array
     
                 state_machine.get_value("queue").push(queueable_objects);
             }
-        }, 2000)
+        }, 1000)
     
-    
+        Observer.start_now(system_objects);
         // //Observer interval
         //  setInterval(event => {
         //      // attach them to the panels

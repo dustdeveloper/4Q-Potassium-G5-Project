@@ -3,6 +3,8 @@ var intro_timeline = gsap.timeline();
 var complete_signal = new Signal();
 var intro_complete = false;
 
+var skip_all = true;
+
 function add_to(text, side) {
     let new_paragraph = document.createElement("p");
     new_paragraph.textContent = text;
@@ -231,65 +233,71 @@ function interactive() {
     intro_modal()
 }
 
-intro_timeline
-    // initial intro left
-    .call(add_to, ["ENCODER INITIATIVE (EI) 2001-2015", "left"], 0)
-    .call(add_to, ["Property of EI. Do not replicate nor reproduce this software/hardware.", "left"], 0)
-    .call(add_to, ["Any attempts to do such will be faced with repercussions.", "left"], 0)
-    .call(add_to, ["SANITY CHECKING (1 of 5)", "left"], 1)
-    .call(add_to, ["SANITY CHECKING (2 of 5)", "left"], 1.1)
-    .call(add_to, ["SANITY CHECKING (3 of 5)", "left"], 1.1)
-    .call(add_to, ["SANITY CHECKING (4 of 5)", "left"], 1.1)
-    .call(add_to, ["SANITY CHECKING (5 of 5)", "left"], 1.3)
-    .call(add_to, ["AUTHENTICATING MODULES", "left"], 1.4)
-    // initial intro right
-    .call(add_to, ["-", "right"], 0)
-    .call(add_to, ["-", "right"], 0)
-    .call(add_to, ["-", "right"], 0)
-    .call(add_to, ["[ OK ]", "right"], 1)
-    .call(add_to, ["[ OK ]", "right"], 1.1)
-    .call(add_to, ["[ OK ]", "right"], 1.1)
-    .call(add_to, ["[ OK ]", "right"], 1.1)
-    .call(add_to, ["[ OK ]", "right"], 1.4)
-    .call(add_to, ["[ OK ]", "right"], 1.7)
+if (skip_all) {
+    document.querySelector("#intro").style.width = "100%";
+    document.querySelector("#intro").style.height = "80%";
+    interactive();
+} else {
+    intro_timeline
+        // initial intro left
+        .call(add_to, ["ENCODER INITIATIVE (EI) 2001-2015", "left"], 0)
+        .call(add_to, ["Property of EI. Do not replicate nor reproduce this software/hardware.", "left"], 0)
+        .call(add_to, ["Any attempts to do such will be faced with repercussions.", "left"], 0)
+        .call(add_to, ["SANITY CHECKING (1 of 5)", "left"], 1)
+        .call(add_to, ["SANITY CHECKING (2 of 5)", "left"], 1.1)
+        .call(add_to, ["SANITY CHECKING (3 of 5)", "left"], 1.1)
+        .call(add_to, ["SANITY CHECKING (4 of 5)", "left"], 1.1)
+        .call(add_to, ["SANITY CHECKING (5 of 5)", "left"], 1.3)
+        .call(add_to, ["AUTHENTICATING MODULES", "left"], 1.4)
+        // initial intro right
+        .call(add_to, ["-", "right"], 0)
+        .call(add_to, ["-", "right"], 0)
+        .call(add_to, ["-", "right"], 0)
+        .call(add_to, ["[ OK ]", "right"], 1)
+        .call(add_to, ["[ OK ]", "right"], 1.1)
+        .call(add_to, ["[ OK ]", "right"], 1.1)
+        .call(add_to, ["[ OK ]", "right"], 1.1)
+        .call(add_to, ["[ OK ]", "right"], 1.4)
+        .call(add_to, ["[ OK ]", "right"], 1.7)
 
-    .call(clear, null, 2)
-    // initial intro 2 left
-    .call(add_to, ["WARNING! MODIFIED REGISTER DETECTED", "left"], 2)
-    .call(add_to, ["WARNING! MODIFIED REGISTER DETECTED", "left"], 2.05)
-    .call(add_to, ["WARNING! MODIFIED REGISTER DETECTED", "left"], 2.05)
-    .call(add_to, ["WARNING! MODIFIED REGISTER DETECTED", "left"], 2.2)
-    .call(add_to, ["WARNING! MODIFIED REGISTER DETECTED", "left"], 2.2)
-    .call(add_to, ["WARNING! MODIFIED REGISTER DETECTED", "left"], 2.3)
-    .call(add_to, ["CRITICAL! System Optimizations have failed.", "left"], 3)
-    .call(add_to, ["- open log to view error", "left"], 3)
-    .call(clear, null, 2)
-    .call(add_to, ["0x73F0DA", "right"], 2)
-    .call(add_to, ["0x03905C", "right"], 2.05)
-    .call(add_to, ["0xAD8F3D", "right"], 2.05)
-    .call(add_to, ["0x0AF85D", "right"], 2.2)
-    .call(add_to, ["0xB1FF7F", "right"], 2.2)
-    .call(add_to, ["0xAD1B19", "right"], 2.2)
+        .call(clear, null, 2)
+        // initial intro 2 left
+        .call(add_to, ["WARNING! MODIFIED REGISTER DETECTED", "left"], 2)
+        .call(add_to, ["WARNING! MODIFIED REGISTER DETECTED", "left"], 2.05)
+        .call(add_to, ["WARNING! MODIFIED REGISTER DETECTED", "left"], 2.05)
+        .call(add_to, ["WARNING! MODIFIED REGISTER DETECTED", "left"], 2.2)
+        .call(add_to, ["WARNING! MODIFIED REGISTER DETECTED", "left"], 2.2)
+        .call(add_to, ["WARNING! MODIFIED REGISTER DETECTED", "left"], 2.3)
+        .call(add_to, ["CRITICAL! System Optimizations have failed.", "left"], 3)
+        .call(add_to, ["- open log to view error", "left"], 3)
+        .call(clear, null, 2)
+        .call(add_to, ["0x73F0DA", "right"], 2)
+        .call(add_to, ["0x03905C", "right"], 2.05)
+        .call(add_to, ["0xAD8F3D", "right"], 2.05)
+        .call(add_to, ["0x0AF85D", "right"], 2.2)
+        .call(add_to, ["0xB1FF7F", "right"], 2.2)
+        .call(add_to, ["0xAD1B19", "right"], 2.2)
 
-    .call(clear, null, 3.2)
-    // initial intro 3 left
-    .call(add_to, ["Loading Unit monitor1", "left"], 3.2)
-    .call(add_to, ["Loading Unit submonitor2", "left"], 3.2)
-    .call(add_to, ["Loading Unit submonitor3", "left"], 3.2)
-    .call(add_to, ["Loading Unit interfacemanager", "left"], 3.3)
-    .call(add_to, ["P2P integration...", "left"], 4)
-    .call(add_to, ["Running checks...", "left"], 4)
-    .to("#intro", {opacity: 0, duration: 0}, 4.5)
-    .to("#intro", {opacity: 1, width: "100%", height: "80%", duration: 0}, 4.6)
-    .call(add_to, ["PREREQUISITES COMPLETE! Loading...", "left"], 5)
-    // initial intro 3 right
-    .call(add_to, ["[ OK ]", "right"], 3.2)
-    .call(add_to, ["[ OK ]", "right"], 3.2)
-    .call(add_to, ["[ OK ]", "right"], 3.2)
-    .call(add_to, ["[ OK ]", "right"], 3.7)
-    .call(add_to, ["[ OK ]", "right"],  4)
-    .call(add_to, ["[ OK ]", "right"],  5)
+        .call(clear, null, 3.2)
+        // initial intro 3 left
+        .call(add_to, ["Loading Unit monitor1", "left"], 3.2)
+        .call(add_to, ["Loading Unit submonitor2", "left"], 3.2)
+        .call(add_to, ["Loading Unit submonitor3", "left"], 3.2)
+        .call(add_to, ["Loading Unit interfacemanager", "left"], 3.3)
+        .call(add_to, ["P2P integration...", "left"], 4)
+        .call(add_to, ["Running checks...", "left"], 4)
+        .to("#intro", {opacity: 0, duration: 0}, 4.5)
+        .to("#intro", {opacity: 1, width: "100%", height: "80%", duration: 0}, 4.6)
+        .call(add_to, ["PREREQUISITES COMPLETE! Loading...", "left"], 5)
+        // initial intro 3 right
+        .call(add_to, ["[ OK ]", "right"], 3.2)
+        .call(add_to, ["[ OK ]", "right"], 3.2)
+        .call(add_to, ["[ OK ]", "right"], 3.2)
+        .call(add_to, ["[ OK ]", "right"], 3.7)
+        .call(add_to, ["[ OK ]", "right"],  4)
+        .call(add_to, ["[ OK ]", "right"],  5)
 
-    // interactive intro
-    .call(clear, null, 5.5)
-    .call(interactive, null, 5.5) // call interactive function
+        // interactive intro
+        .call(clear, null, 5.5)
+        .call(interactive, null, 5.5) // call interactive function
+}
