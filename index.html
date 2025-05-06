@@ -53,15 +53,15 @@
         <section id="play-cover">
             <section id="play-section">
                 <h1>&block;&block;&block;&block;&block;&block; Game Parameters</h1>
-                <form id="the-form">
+                <form id="the-form"  onsubmit="return false;">
                     <label for="username">Username</label><br>
                     <input type="text" name="username" pattern="[A-Za-z0-9]+" title="Only letters and numbers are allowed" required><br>
                     <label for="role">Role</label><br>
                     <div><input type="button" class="form-button" id="button-left" value="Instructor" onclick="setDifficultyValue(false)"><input type="button" class="form-button" id="button-right" value="Trainee" onclick="setDifficultyValue(true)"></div><br>
 
                     <label id="difficulty-selector" for="difficulty">Difficulty</label><br>
-                    <div id="difficulty-selection"><input type="button" class="form-button" id="button-left" value="Easy"><input type="button" class="form-button" id="button-center" value="Medium"><input type="button" class="form-button" id="button-right" value="Hard"></div><br>
-                    <input type="submit" onsubmit="validateAndRun(); return false;" value="Start Game" id="submit-button">
+                    <div id="difficulty-selection"><input type="button" class="form-button" id="button-left" value="Easy" onclick="set_difficulty_index(1000)"><input type="button" class="form-button" id="button-center" value="Medium" onclick="set_difficulty_index(500)"><input type="button" class="form-button" id="button-right" value="Hard" onclick="set_difficulty_index(0)"></div><br>
+                    <input type="submit" value="Start Game" id="submit-button">
                 </form>
                 <div>
                     <h3>REGULATIONS</h3>
@@ -73,6 +73,12 @@
                 </div>
 
                 <script>
+                    let difficulty_index = 1000;
+
+                    function set_difficulty_index(temp) {
+                        difficulty_index = temp
+                    }
+
                     let use_difficulty = false;
                     function setDifficultyValue(val) {
                         use_difficulty = val;
@@ -86,6 +92,8 @@
                     
                     document.getElementById("the-form").addEventListener("submit", (event) => {
                         event.preventDefault(); // Prevent form submission
+
+                        let data = {}
                         
                         let usernameInput = document.querySelector("input[name='username']");
                         let usernameValue = usernameInput.value;
@@ -94,9 +102,21 @@
 
                         if (!isValid) {
                             alert("ooooooo placeholder things invalid ooooo");
+                            return;
                         }
 
                         Cookie.set("lastUsername", usernameValue);
+
+                        data = {
+                            date: new Date().toISOString(),
+                            time: new Date().getTime(),
+
+                            username: usernameValue, // replace with last user's name
+                            difficulty_index: difficulty_index,
+                        }
+
+                        Session.set("parameters", data, true);
+                        window.location.href = "webpages/game_test.html";
                     });
                 </script>
             </section>

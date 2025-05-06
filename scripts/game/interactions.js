@@ -68,79 +68,197 @@ function template_unit_generate(identifier) //One Unit
         stop_fire: new Signal(),
     }
 
-    unit.NORMAL = (state_machine, tick) => 
-        {
-            //Calculations
-            //Coolant Amount
-            state_machine.set_value("_coolant_amount_rate", 
-                clamp((state_machine.get_value("coolant_in_flow") + state_machine.get_value("coolant_out_flow")).toFixed(2), -1, 1)
-            );
+    unit.NORMAL = (state_machine, tick) => {
+        //Calculations
+        //Coolant Amount
+        state_machine.set_value("_coolant_amount_rate", 
+            clamp((state_machine.get_value("coolant_in_flow") + state_machine.get_value("coolant_out_flow")).toFixed(2), -1, 1)
+        );
 
-            state_machine.set_value("coolant_amount",
-                clamp((state_machine.get_value("coolant_amount") + state_machine.get_value("_coolant_amount_rate")).toFixed(2), 0, state_machine.get_value("coolant_amount_max"))
-            );
+        state_machine.set_value("coolant_amount",
+            clamp((state_machine.get_value("coolant_amount") + state_machine.get_value("_coolant_amount_rate")).toFixed(2), 0, state_machine.get_value("coolant_amount_max"))
+        );
 
-            //Chamber Pressure
-            state_machine.set_value("chamber_pressure",
-                clamp(((Math.cbrt(state_machine.get_value("coolant_amount")) * Math.cbrt(state_machine.get_value("coolant_amount")) * (9.81)) / (Math.cbrt(state_machine.get_value("coolant_amount_max")) * Math.cbrt(state_machine.get_value("coolant_amount_max")))).toFixed(2), 0, 9.81)
-            );
-            
-            //Coolant Temperature
-            state_machine.set_value("coolant_temperature",
-                clamp(((state_machine.get_value("coolant_amount") * state_machine.get_value("chamber_pressure")) / (62.07*0.08206)).toFixed(2), 0, 1155.5981)
-            );
-            
-            state_machine.set_value("processor_temperature",
-                clamp((state_machine.get_value("coolant_temperature") / 11.555981).toFixed(2), 0, 100)
-            );
-            
-            //Power
-            state_machine.set_value("power_in",
-                clamp(((state_machine.get_value("chamber_pressure") * state_machine.get_value("coolant_amount")) / (time / data.difficulty_index)).toFixed(2), 0.01, 58860)
-            );
+        //Chamber Pressure
+        state_machine.set_value("chamber_pressure",
+            clamp(((Math.cbrt(state_machine.get_value("coolant_amount")) * Math.cbrt(state_machine.get_value("coolant_amount")) * (9.81)) / (Math.cbrt(state_machine.get_value("coolant_amount_max")) * Math.cbrt(state_machine.get_value("coolant_amount_max")))).toFixed(2), 0, 9.81)
+        );
+        
+        //Coolant Temperature
+        state_machine.set_value("coolant_temperature",
+            clamp(((state_machine.get_value("coolant_amount") * state_machine.get_value("chamber_pressure")) / (62.07*0.08206)).toFixed(2), 0, 1155.5981)
+        );
+        
+        state_machine.set_value("processor_temperature",
+            clamp((state_machine.get_value("coolant_temperature") / 11.555981).toFixed(2), 0, 100)
+        );
+        
+        //Power
+        state_machine.set_value("power_in",
+            clamp(((state_machine.get_value("chamber_pressure") * state_machine.get_value("coolant_amount")) / (time / data.difficulty_index)).toFixed(2), 0.01, 58860)
+        );
 
-            if (state_machine.get_value("chamber_pressure") >= 9) {
-                // chamber damage event
-                state_machine.set_value("chamber_damage", true);
-                state_machine.change_state("CHAMBER_DAMAGE");
-            };
-    
-            if (state_machine.get_value("processor_temperature") > 100) {
-                // fire event
-                state_machine.get_value("on_fire", true);
-                state_machine.set_value("chamber_damage", true);
-                state_machine.get_value("on_fire_signal").fire();
-            };
-
-            // ? "updates every half a second" section
-            if (tick <= 10) {
-                return;
-            };
-
-            if (state_machine.get_value("power_in") < 10) { // power_in implementation
-                state_machine.set_value("powered", false);
-                return;
-            };
-
-            state_machine.set_value("powered", true);
-
-            let item = state_machine.get_value("queue")[0];
-            if (item == null) { return };
-
-            for (let [key, value] of Object.entries(item)) {
-                state_machine.set_value(key, value);
-            };
-
-            state_machine.get_value("queue").shift();
+        if (state_machine.get_value("chamber_pressure") >= 9) {
+            // chamber damage event
+            state_machine.set_value("chamber_damage", true);
+            state_machine.change_state("CHAMBER_DAMAGE");
         };
 
+        if (state_machine.get_value("processor_temperature") > 100) {
+            // fire event
+            state_machine.get_value("on_fire", true);
+            state_machine.set_value("chamber_damage", true);
+            state_machine.get_value("on_fire_signal").fire();
+        };
+
+        // ? "updates every half a second" section
+        if (tick <= 10) {
+            return;
+        };
+
+        if (state_machine.get_value("power_in") < 10) { // power_in implementation
+            state_machine.set_value("powered", false);
+            return;
+        };
+
+        state_machine.set_value("powered", true);
+
+        let item = state_machine.get_value("queue")[0];
+        if (item == null) { return };
+
+        for (let [key, value] of Object.entries(item)) {
+            state_machine.set_value(key, value);
+        };
+
+        state_machine.get_value("queue").shift();
+    };
+
     unit.CHAMBER_DAMAGE = (state_machine, tick) => { // relies on chamber_damage variable
+        //Calculations
+        //Coolant Amount
+        state_machine.set_value("_coolant_amount_rate", 
+            clamp((state_machine.get_value("coolant_in_flow") + state_machine.get_value("coolant_out_flow")).toFixed(2), -1, 0.5)
+        );
+
+        state_machine.set_value("coolant_amount",
+            clamp((state_machine.get_value("coolant_amount") + state_machine.get_value("_coolant_amount_rate")).toFixed(2), 0, 200) // ! different
+        );
+
+        //Chamber Pressure
+        state_machine.set_value("chamber_pressure",
+            clamp(((Math.cbrt(state_machine.get_value("coolant_amount")) * Math.cbrt(state_machine.get_value("coolant_amount")) * (9.81)) / (Math.cbrt(state_machine.get_value("coolant_amount_max")) * Math.cbrt(state_machine.get_value("coolant_amount_max")))).toFixed(2), 0, 1) // ! different
+        );
+        
+        //Coolant Temperature
+        state_machine.set_value("coolant_temperature",
+            clamp(((state_machine.get_value("coolant_amount") * state_machine.get_value("chamber_pressure")) / (62.07*0.08206)).toFixed(2), 0, 1155.5981)
+        );
+        
+        state_machine.set_value("processor_temperature",
+            clamp((state_machine.get_value("coolant_temperature") / 9.555981).toFixed(2), 0, 100) // ! different
+        );
+        
+        //Power
+        state_machine.set_value("power_in",
+            clamp(((state_machine.get_value("chamber_pressure") * state_machine.get_value("coolant_amount")) / (time / data.difficulty_index)).toFixed(2), 0.01, 58860/2) // ! different
+        );
+
+        if (state_machine.get_value("processor_temperature") > 100) {
+            // fire event
+            state_machine.get_value("on_fire", true);
+            state_machine.set_value("chamber_damage", true);
+            state_machine.get_value("on_fire_signal").fire();
+        };
+
+        // ? "updates every half a second" section
+        if (tick <= 10) {
+            return;
+        };
+
+        if (state_machine.get_value("power_in") < 10) { // power_in implementation
+            state_machine.set_value("powered", false);
+            return;
+        };
+
+        state_machine.set_value("powered", true);
+
+        let item = state_machine.get_value("queue")[0];
+        if (item == null) { return };
+
+        for (let [key, value] of Object.entries(item)) {
+            state_machine.set_value(key, value);
+        };
+
+        state_machine.get_value("queue").shift();
     };
 
     unit.BURNT = (state_machine, tick) => { // relies on finishing on_fire completion variable
+//Calculations
+        //Coolant Amount
+        state_machine.set_value("_coolant_amount_rate", 
+            clamp((state_machine.get_value("coolant_in_flow") + state_machine.get_value("coolant_out_flow")).toFixed(2), -1, 1)
+        );
+
+        state_machine.set_value("coolant_amount",
+            clamp((state_machine.get_value("coolant_amount") + state_machine.get_value("_coolant_amount_rate")).toFixed(2), 0, state_machine.get_value("coolant_amount_max"))
+        );
+
+        //Chamber Pressure
+        state_machine.set_value("chamber_pressure",
+            clamp(((Math.cbrt(state_machine.get_value("coolant_amount")) * Math.cbrt(state_machine.get_value("coolant_amount")) * (9.81)) / (Math.cbrt(state_machine.get_value("coolant_amount_max")) * Math.cbrt(state_machine.get_value("coolant_amount_max")))).toFixed(2), 0, 9.81)
+        );
+        
+        //Coolant Temperature
+        state_machine.set_value("coolant_temperature",
+            clamp(((state_machine.get_value("coolant_amount") * state_machine.get_value("chamber_pressure")) / (62.07*0.08206)).toFixed(2), 0, 1155.5981)
+        );
+        
+        state_machine.set_value("processor_temperature",
+            clamp((state_machine.get_value("coolant_temperature") / 11.555981).toFixed(2), 0, 100)
+        );
+        
+        //Power
+        state_machine.set_value("power_in",
+            clamp(((state_machine.get_value("chamber_pressure") * state_machine.get_value("coolant_amount")) / (time / data.difficulty_index)).toFixed(2), 0.01, 58860)
+        );
+
+        if (state_machine.get_value("chamber_pressure") >= 9) {
+            // chamber damage event
+            state_machine.set_value("chamber_damage", true);
+            state_machine.change_state("CHAMBER_DAMAGE");
+        };
+
+        if (state_machine.get_value("processor_temperature") > 100) {
+            // fire event
+            state_machine.get_value("on_fire", true);
+            state_machine.set_value("chamber_damage", true);
+            state_machine.get_value("on_fire_signal").fire();
+        };
+
+        // ? "updates every half a second" section
+        if (tick <= 10) {
+            return;
+        };
+
+        if (state_machine.get_value("power_in") < 10) { // power_in implementation
+            state_machine.set_value("powered", false);
+            return;
+        };
+
+        state_machine.set_value("powered", true);
+
+        let item = state_machine.get_value("queue")[0];
+        if (item == null) { return };
+
+        for (let [key, value] of Object.entries(item)) {
+            state_machine.set_value(key, value);
+        };
+
+        state_machine.get_value("queue").shift();
     };
 
     unit.DESTROYED = (state_machine, tick) => { // relies on destroyed
+        // does nothing
     };
 
     return unit;
@@ -163,7 +281,7 @@ class Game {
                 Observer.change_lookat(visible_number-1);
             })
         }
-        
+
         data = data;
     
         //Unit interval

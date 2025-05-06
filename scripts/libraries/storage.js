@@ -67,7 +67,10 @@ class Session {
 
         if (is_JSON) {
             value = JSON.stringify(value);
+            console.log(value);
         };
+
+        
 
         sessionStorage.setItem(item_name, value);
         return true;
