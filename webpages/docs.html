@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="author" content="GROUP 1">
+        <meta name="keywords" content="game, test, simulation, system, monitor">
+
+        <title>Game Document</title>
+    </head>
+    <body>
+        <h1>(barebones) Game Documentation</h1>
+        <p>This document provides overview on the controls of the game and the game's scenarios.</p>
+        <h2>Controller Overview</h2>
+        <p>There are only <strong>4</strong> keys that help in controlling the system, being: </p>
+        <ul>
+            <li><strong>Q :</strong> Open the COMMAND modal</li>
+            <li><strong>W :</strong> Select ALL UNITS</li>
+            <li><strong>O :</strong> Select ONE UNIT (current unit selected)</li>
+            <li><strong>P :</strong> Send COMMAND</li>
+        </ul>
+        <h2>Possible Scenarios</h2>
+        <p>Two values affect the system: <strong>coolant_in_flow and coolant_out_flow.</strong> When combined, they make <strong>_coolant_amount_rate</strong> that gets added to the main <strong>coolant_amount.</strong> <br> Positive values add to the amount, and vice versa for the Negative values.</p>
+        <p>When handling the system, it is advised that you must carefully read the REF VALUE located in any ACTIVE LOG.</p>
+        <p> EXAMPLE: "Warning detected at UNIT 05 [REF :: AAA_45655]" "Signal detected at UNIT 01 [REF :: DEAD]"</p>
+        <p>The current scenarios are possible with the system:</p>
+        <ul>
+            <li><strong>DISCONNECTED :</strong> This unit is recognized to be DISCONNECTED. Nothing can be done to restore it.</li>
+            <li><strong>AAA_0001:</strong> Chamber pressure is above the safety threshold (chamber_pressure > 7) <br>
+                <ul>
+                    <li>Attempt to LOWER the coolant_amount by making lower base.</li>
+                </ul>
+            </li>
+            <li><strong>AAA_0002:</strong> Power input is under the safety threshold (power_in < 400)
+                <ul>
+                    <li>Attempt to RESTORE the coolant_amount by making higher base (Not higher than 1).</li>
+                </ul>
+            </li>
+            <li><strong>AAA_0003:</strong> Unit state changed to "chamber_damage". Cannot be reverted.
+                <ul>
+                    <li>idk</li>
+                </ul>
+            </li>
+        </ul>
+    </body> 
+</html>

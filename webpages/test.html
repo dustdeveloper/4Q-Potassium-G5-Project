@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="UNIT TESTS">
+        <title>Unit Tests</title>
+    </head>
+    <body>
+        <script src="../scripts/libraries/signal.js"></script>
+        <script src="../scripts/test_signal.js"></script>
+
+        <script src="../scripts/libraries/state_machine.js"></script>
+        <script src="../scripts/test_sm.js"></script>
+
+        <script src="../scripts/libraries/sound.js"></script>
+        <script src="../scripts/test_sound.js"></script>
+
+        <script src="../scripts/libraries/storage.js"></script>
+
+        <button onclick="test_sound.play()">Press Me to play Utopian Dreams!</button>
+        <button onclick="test_sound.stop()">Press Me to stop Utopian Dreams!</button>
+        <button onclick="test_sound.pause()">Press Me to pause Utopian Dreams!</button>
+        <button onclick="test_sound.set_volume(0.2)">Press Me to set volume to 0.2!</button>
+        <button onclick="test_sound.set_volume()">Press Me to reset volume value!</button>
+        <button onclick="test_sound.set_time(10)">Press Me to send sound back to 10 seconds!</button>
+    </body>
+</html>

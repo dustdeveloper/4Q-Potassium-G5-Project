@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="author" content="GROUP 1">
+		<meta name="keywords" content="game, test, simulation, system, monitor">
+		<meta name="date-submitted" content="06/05/2025">
+
+        <title>Game Test</title>
+        <!--LIBRARIES FIRST-->
+        <link rel="stylesheet" href="../assets/css/game_test.css">
+
+        <script src="../scripts/libraries/GSAP/gsap.min.js"></script>
+        <script src="../scripts/libraries/GSAP/TextPlugin.min.js"></script>
+
+        <script src="../scripts/libraries/state_machine.js" defer></script> 
+        <script src="../scripts/libraries/storage.js" defer></script> 
+        <script src="../scripts/libraries/signal.js" defer></script> 
+        <script src="../scripts/libraries/input.js" defer></script> 
+        <script src="../scripts/libraries/sound.js" defer></script> 
+
+        <script src="../scripts/game/observer.js" defer></script> 
+        <script src="../scripts/game/interactions.js" defer></script>
+        <script src="../scripts/game/intro.js" defer></script>  
+    </head>
+
+    <body>
+        <div class="fixed-fullscreen" id="percent50-background">
+            <section class="modal" id="intro">
+                <div id="left-intro-indicator">
+                </div>
+                <div id="right-intro-indicator">
+                </div>
+            </section>
+        </div>
+        <section id="centered">
+            <section class="row">
+                <div class="unit-container-visual" id="u1">
+                    <h4>UNIT 00</h4>
+                    <hr>
+                </div>
+                <div class="unit-container-visual" id="u2">
+                    <h4>UNIT 00</h4>
+                    <hr>
+                </div>
+                <div class="unit-container-visual" id="u3">
+                    <h4>UNIT 00</h4>
+                    <hr>
+                </div>
+                <div class="unit-container-visual" id="u4">
+                    <h4>UNIT 00</h4>
+                    <hr>
+                </div>
+                <div class="unit-container-visual" id="u5">
+                    <h4>UNIT 00</h4>
+                    <hr>
+                </div>
+                <div class="unit-container-visual" id="u6">
+                    <h4>UNIT 00</h4>
+                    <hr>
+                </div>
+            </section>
+            <section class="row" id="shift-right">
+                <div class="unit-container-visual" id="u7">
+                    <h4>UNIT 00</h4>
+                    <hr>
+                </div>
+                <div class="unit-container-visual" id="u8">
+                    <h4>UNIT 00</h4>
+                    <hr>
+                </div>
+                <div class="unit-container-visual" id="u9">
+                    <h4>UNIT 00</h4>
+                    <hr>
+                </div>
+                <div class="unit-container-visual" id="u10">
+                    <h4>UNIT 00</h4>
+                    <hr>
+                </div>
+                <div class="unit-container-visual" id="u11">
+                    <h4>UNIT 00</h4>
+                    <hr>
+                </div>
+                <div class="unit-container-visual" id="u12">
+                    <h4>UNIT 00</h4>
+                    <hr>
+                </div>
+                
+            </section>
+        </section>
+        <p id="score"></p>
+        <section id="system-monitor">
+            <div id="left-monitor" >
+                <h3>UNIT MONITOR</h3>
+                <h2>Selected Unit: 01</h2>
+                <h4 id="base_coolant">a</h4>
+                <h4 id="coolant_amount">a</h4>
+                <h4 id="_coolant_amount_rate">winging it</h4>
+                <h4 id="coolant_in_flow">sd</h4>
+                <h4 id="coolant_out_flow">af</h4>
+                <hr>
+                <h4 id="coolant_temperature">er</h4>
+                <h4 id="processor_temperature">vc</h4>
+                <hr>
+                <h4 id="chamber_pressure">as</h4>
+                <h4 id="power_in">re</h4>
+            </div>
+            <div id="right-monitor">
+                <h3>SYSTEMS MONITOR</h3>
+                <div id="log">
+                    <p>log</p>
+                </div>
+            </div>
+        </section>
+
+        <p id="command">&emsp;Select Targets: W - All units, O - Selected unit</p>
+    </body>
+</html>
