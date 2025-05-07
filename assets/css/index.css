@@ -1,0 +1,350 @@
+html, body, h1, h3 {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+body {
+    background-color: black;
+}
+
+button, input {
+	background: none;
+	color: inherit;
+	border: none;
+	padding: 0;
+	font: inherit;
+	cursor: pointer;
+	outline: inherit;
+}
+/* Loader CSS */
+
+.loader {
+    background-color: black;
+
+    position: relative;
+    width: 100%;
+    height: 50vh;
+
+    overflow: hidden;
+
+    z-index: 1000000;
+}
+
+.central {
+    background-color: black;
+
+    width: 40%;
+    height: 10vh;
+    margin-inline: auto;
+
+    color: rgb(255, 0, 0);
+    font-family: monospace;
+    font-size: large;
+    text-align: justify;
+
+    overflow: hidden;
+
+    padding: 1em;
+    border: solid rgb(255, 0, 0);
+}
+
+.central.central-top {
+    border-bottom: 0;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -100%);
+}
+
+.central.central-bottom {
+    border: solid rgba(0,0,0,0);
+    border-top: 0;
+}
+
+#filler-wall {
+    position: fixed;
+    width: 200%;
+    height: 100vh;
+    top: 0;
+    bottom: 0;
+
+    background-color: white;
+    z-index: 999999;
+}
+
+#epilepsy {
+    font-size: x-large;
+}
+
+/* Loader CSS end */
+
+#background-vid {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+
+    object-fit: fill;
+    opacity: 0.1;
+}
+
+.center-zone {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    
+    width: 100%;
+    height: 100vh;
+
+    margin-left: auto;
+    margin-right: auto;
+
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.navigation {
+    width: 100%;
+    height: 7vh;
+
+    display: flex;
+
+    background-color: rgb(0,0,0);
+}
+
+
+#nav-text {
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: 1em;
+
+    flex: 1;
+
+    font-family: monospace;
+    font-weight: 1000;
+    color: rgb(255, 255, 255);
+}
+
+#nav-button {
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-right: 1%;
+
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    
+    flex: 0.2;
+    max-width: fit-content;
+    height: 2em;
+
+    background-color: rgb(73, 128, 255);
+    border-radius: 999em;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    color: rgb(255, 255, 255);
+}
+
+.main-text {
+    margin-top: 0.1em;
+    margin-left: 1%;
+    margin-right: 1%;
+
+    color: rgb(255, 255, 255);
+    font-size: 7em;
+    font-family: 'M PLUS 1 Code','Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    line-height: 1.1em;
+}
+
+#sub-main-text {
+    font-size: 2em;
+    font-weight: 500;
+    /*opacity: 0.1;*/
+    text-align: right;
+}
+
+.description-container {
+    position: absolute;
+    bottom: 2vh;
+
+    width: 100%;
+    display: flex;
+}
+
+.description-container > * {
+    margin-left: 1%;
+    margin-right: 1%;
+    margin-top: 1%;
+    margin-bottom: 1%;
+
+    padding: 1em;
+    height: 25vh;
+
+    color: rgb(255, 255, 255);
+    background-color: rgb(0, 0, 0);
+    clip-path: polygon(
+        10px 0,
+        calc(100% - 10px) 0,
+        100% 10px,
+        100% calc(100% - 10px),
+        calc(100% - 10px) 100%,
+        10px 100%,
+        0 calc(100% - 10px),
+        0 10px
+    );
+
+    font-family: 'IBM Plex Sans', 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    text-align: justify;
+}
+.description-container h1 {
+    font-size: 1.2em;
+    font-weight: 900;
+}
+
+#left-container {
+    flex: 5;
+    display: flex;
+}
+#left-container > h1 {
+    flex: 1;
+    border-right: solid rgb(255, 255, 255);
+}
+#left-container > div {
+    flex: 5;
+
+    padding-left: 0.8em;
+    margin: 1%;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+#right-container {
+    flex: 8;
+    display: flex;
+}
+#right-container > h1 {
+    flex: 1;
+}
+#button-override {
+    flex: 2;
+
+    margin: 1%;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+#summary {
+    flex: 5;
+
+    padding-left: 1em;
+    padding-right: 1em;
+    margin: 1%;
+    margin-top: 0;
+    margin-bottom: 0;
+
+    border-left: solid rgb(255, 255, 255);
+    border-right: solid rgb(255, 255, 255);
+}
+
+#button-override > button {
+    width: 100%;
+    margin-bottom: 0.5em;
+    padding: 0.2em;
+
+    text-align: center;
+    border: 2px solid rgb(255, 255, 255);
+    border-radius: 5px;
+
+    font-size: 1em;
+    font-weight: 600;
+}
+
+#play-cover {
+    position: fixed;
+    height: 100vh;
+    width: 100%;
+    right: -100%;
+
+    background-color: rgb(255, 255, 255);
+    opacity: 1;
+}
+
+#play-section {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+
+    height: 100vh;
+    width: 30%;
+    opacity: 1;
+
+    background-color: rgb(0,0,0);
+}
+#play-section > * {
+    color: rgb(255,255,255);
+    mix-blend-mode: difference;
+}
+#play-section > h1 {
+    flex: 1;
+    width: 400%;
+
+    font-size: 5em;
+
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    font-family: 'Special Gothic Expanded One', 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+#the-form {
+    flex: 5;
+    width: 85%;
+
+    padding-left: 5%;
+    font-family: 'IBM Plex Sans', 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+#the-form > * {
+    flex: 5;
+    width: 100%;
+}
+
+#the-form > input {
+    border:rgb(255, 255, 255) solid 1px;
+    border-radius: 5px;
+}
+
+#the-form > div {
+    display: flex;
+}
+
+.form-button {
+    flex: 5;
+
+    border:rgb(255, 255, 255) solid 1px;
+}
+
+#button-left {
+    border-radius: 5px 0 0 5px;
+}
+#button-right {
+    border-radius: 0 5px 5px 0;
+}
+
+#play-section > div {
+    flex: 1;
+    padding-left: 5%;
+
+    font-family: 'IBM Plex Sans', 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+img {
+    position: absolute;
+}
+
+#title-div {
+    margin-left: 1%;
+    margin-right: 1%;
+    height: 1px;
+
+    background-color: rgb(255, 255, 255);
+}
+
+.key-indicator {
+    width: 1em;
+}
