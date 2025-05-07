@@ -101,6 +101,9 @@ html {
 #shift-right {
     transform: translate(4.3%, -15%) rotate(180deg);
 }
+#shift-right h4 {
+    transform: rotate(180deg);
+}
 
 .unit-container-visual > h4 {
     margin: 0;
@@ -182,4 +185,46 @@ html {
     font-family: Inconsolata, monospace;
     font-size: 1.5em;
     font-weight: 500;
+}
+
+#command {
+
+    position: fixed;
+    left: 0;
+    bottom: 0;
+
+    opacity: 1;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+
+    font-size: 3em;
+    font-family: Inconsolata, monospace;
+
+    background-color: #000000;
+}
+
+#log {
+    background-color: rgba(0, 0, 0, 0.9);
+    width: 100%;
+    height: 90%;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    color: #FFFFFF;
+    font-size: 2em;
+    font-family: Inconsolata, monospace;
+}
+
+#log > p {
+    margin: 0;
+    padding: 0;
+    padding-left: 10px;
+}
+
+#score {
+    font-size: 2em;
+    font-family: Inconsolata, monospace;
+    color: #FFFFFF;
 }

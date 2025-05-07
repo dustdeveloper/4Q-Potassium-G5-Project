@@ -21,11 +21,24 @@
 
 //Variable Declaration
 var system_objects = {};
-var variable_tick_objects = {};
+var dead = 0;
+var score = 0;
 var time = 0;
 var data = {};
+var is_game_over = false;
 
 const clamp = (num, min, max) => Math.min(Math.max(num, min), max) // Range Limit
+
+function new_log(text , color = "yellow") {
+    let beep = new Sound("../../assets/audio/log_beep.mp3", 0.5);
+    beep.play();
+
+    let log = document.querySelector("#log");
+    let new_log = append_new_element("p", log, "cl", "", {color: color});
+    new_log.innerHTML = text;
+    
+    log.scrollTop = log.scrollHeight; // scroll to bottom
+}
 
 //Execution
 function template_unit_generate(identifier) //One Unit
@@ -34,12 +47,10 @@ function template_unit_generate(identifier) //One Unit
     
     unit.variables = {
         identifier: identifier,
-
-        on_fire: false,          // simple boolean variables
-        disconnected: false,     // -
-        chamber_damage: false,   // -
+        
         powered: false,
 
+        base_coolant: 0,
         processor_temperature: 5,// processing temperature (in Degree Celcius)
 
         chamber_pressure: 1,     // pressure (in atm)
@@ -51,28 +62,23 @@ function template_unit_generate(identifier) //One Unit
         coolant_out_flow: -0.25,     // rate of flow (in liters per tick)
 
         power_in: 0,             // amount of power (in kilowatts)
-        unit_health: 100,        // ! NOT DONE general health
+        queue: [],               // items in queue to process
 
-        sync_level: 0,           // ! NOT DONE synchronization level (must be matched with other units)
-        queue: [],               // ! NOT DONE items in queue to process
+        is_in_warning: false, // if the unit is in warning state
+        is_in_warning_power: false,
 
         //Pressure & Amount
         _coolant_amount_rate: 0, 
 
-        //Health
-        _unit_health_rate: 0,
-
-        disconnected_signal: new Signal(),
+        cd_signal: new Signal(),
         destroyed_signal: new Signal(),
-        on_fire_signal: new Signal(),
-        stop_fire: new Signal(),
     }
 
     unit.NORMAL = (state_machine, tick) => {
         //Calculations
         //Coolant Amount
         state_machine.set_value("_coolant_amount_rate", 
-            clamp((state_machine.get_value("coolant_in_flow") + state_machine.get_value("coolant_out_flow")).toFixed(2), -1, 1)
+            clamp((state_machine.get_value("coolant_in_flow") + state_machine.get_value("coolant_out_flow") + state_machine.get_value("base_coolant")).toFixed(2), -1, 2)
         );
 
         state_machine.set_value("coolant_amount",
@@ -101,14 +107,29 @@ function template_unit_generate(identifier) //One Unit
         if (state_machine.get_value("chamber_pressure") >= 9) {
             // chamber damage event
             state_machine.set_value("chamber_damage", true);
+            state_machine.get_value("cd_signal").fire();
+            new_log("Chamber failure detected in " + state_machine.get_value("identifier") + " [REF :: CD]", "red")
             state_machine.change_state("CHAMBER_DAMAGE");
         };
 
-        if (state_machine.get_value("processor_temperature") > 100) {
-            // fire event
-            state_machine.get_value("on_fire", true);
-            state_machine.set_value("chamber_damage", true);
-            state_machine.get_value("on_fire_signal").fire();
+        if (state_machine.get_value("chamber_pressure") >= 7) { // warn
+            if (state_machine.get_value("is_in_warning")) {
+                return;
+            }
+            state_machine.set_value("is_in_warning", true);
+            new_log("Pressure safety threshold exceeding 7 in UNIT " + state_machine.get_value("identifier") + " [REF :: AAA_00001]");
+        } else {
+            state_machine.set_value("is_in_warning", false);
+        }
+
+        if (state_machine.get_value("power_in") < 50) { // power_in implementation
+            if (state_machine.get_value("is_in_warning_power")) {
+                return;
+            }
+            state_machine.set_value("is_in_warning_power", true);
+            new_log("Power input is below safety threshold in UNIT " + state_machine.get_value("identifier") + " [REF :: AAA_00001]");
+        } else {
+            state_machine.set_value("is_in_warning_power", false);
         };
 
         // ? "updates every half a second" section
@@ -118,6 +139,16 @@ function template_unit_generate(identifier) //One Unit
 
         if (state_machine.get_value("power_in") < 10) { // power_in implementation
             state_machine.set_value("powered", false);
+
+            state_machine.get_value("destroyed_signal").fire();
+
+            let track = new Track("../../assets/audio/explosion.mp3", 0.3);
+
+            setTimeout(() => {
+                track.play();
+            }, 1500);
+
+            state_machine.change_state("DESTROYED");
             return;
         };
 
@@ -137,7 +168,7 @@ function template_unit_generate(identifier) //One Unit
         //Calculations
         //Coolant Amount
         state_machine.set_value("_coolant_amount_rate", 
-            clamp((state_machine.get_value("coolant_in_flow") + state_machine.get_value("coolant_out_flow")).toFixed(2), -1, 0.5)
+            clamp((state_machine.get_value("coolant_in_flow") + state_machine.get_value("coolant_out_flow") + state_machine.get_value("base_coolant")).toFixed(2), -1, 0.5)
         );
 
         state_machine.set_value("coolant_amount",
@@ -160,14 +191,17 @@ function template_unit_generate(identifier) //One Unit
         
         //Power
         state_machine.set_value("power_in",
-            clamp(((state_machine.get_value("chamber_pressure") * state_machine.get_value("coolant_amount")) / (time / data.difficulty_index)).toFixed(2), 0.01, 58860/2) // ! different
+            clamp(((state_machine.get_value("chamber_pressure") * state_machine.get_value("coolant_amount")) / (time / (data.difficulty_index/200))).toFixed(2), 0.01, 58860/2) // ! different
         );
 
-        if (state_machine.get_value("processor_temperature") > 100) {
-            // fire event
-            state_machine.get_value("on_fire", true);
-            state_machine.set_value("chamber_damage", true);
-            state_machine.get_value("on_fire_signal").fire();
+        if (state_machine.get_value("power_in") < 50) { // power_in implementation
+            if (!state_machine.get_value("is_in_warning_power")) {
+
+                state_machine.set_value("is_in_warning_power", true);
+                new_log("Power input is below safety threshold (> 50) in UNIT " + state_machine.get_value("identifier") + " [REF :: AAA_00001]");
+            }
+        } else {
+            state_machine.set_value("is_in_warning_power", false);
         };
 
         // ? "updates every half a second" section
@@ -177,71 +211,16 @@ function template_unit_generate(identifier) //One Unit
 
         if (state_machine.get_value("power_in") < 10) { // power_in implementation
             state_machine.set_value("powered", false);
-            return;
-        };
 
-        state_machine.set_value("powered", true);
+            state_machine.get_value("destroyed_signal").fire();
 
-        let item = state_machine.get_value("queue")[0];
-        if (item == null) { return };
+            let track = new Track("../../assets/audio/explosion.mp3", 0.3);
 
-        for (let [key, value] of Object.entries(item)) {
-            state_machine.set_value(key, value);
-        };
+            setTimeout(() => {
+                track.play();
+            }, 1500);
 
-        state_machine.get_value("queue").shift();
-    };
-
-    unit.BURNT = (state_machine, tick) => { // relies on finishing on_fire completion variable
-//Calculations
-        //Coolant Amount
-        state_machine.set_value("_coolant_amount_rate", 
-            clamp((state_machine.get_value("coolant_in_flow") + state_machine.get_value("coolant_out_flow")).toFixed(2), -1, 1)
-        );
-
-        state_machine.set_value("coolant_amount",
-            clamp((state_machine.get_value("coolant_amount") + state_machine.get_value("_coolant_amount_rate")).toFixed(2), 0, state_machine.get_value("coolant_amount_max"))
-        );
-
-        //Chamber Pressure
-        state_machine.set_value("chamber_pressure",
-            clamp(((Math.cbrt(state_machine.get_value("coolant_amount")) * Math.cbrt(state_machine.get_value("coolant_amount")) * (9.81)) / (Math.cbrt(state_machine.get_value("coolant_amount_max")) * Math.cbrt(state_machine.get_value("coolant_amount_max")))).toFixed(2), 0, 9.81)
-        );
-        
-        //Coolant Temperature
-        state_machine.set_value("coolant_temperature",
-            clamp(((state_machine.get_value("coolant_amount") * state_machine.get_value("chamber_pressure")) / (62.07*0.08206)).toFixed(2), 0, 1155.5981)
-        );
-        
-        state_machine.set_value("processor_temperature",
-            clamp((state_machine.get_value("coolant_temperature") / 11.555981).toFixed(2), 0, 100)
-        );
-        
-        //Power
-        state_machine.set_value("power_in",
-            clamp(((state_machine.get_value("chamber_pressure") * state_machine.get_value("coolant_amount")) / (time / data.difficulty_index)).toFixed(2), 0.01, 58860)
-        );
-
-        if (state_machine.get_value("chamber_pressure") >= 9) {
-            // chamber damage event
-            state_machine.set_value("chamber_damage", true);
-            state_machine.change_state("CHAMBER_DAMAGE");
-        };
-
-        if (state_machine.get_value("processor_temperature") > 100) {
-            // fire event
-            state_machine.get_value("on_fire", true);
-            state_machine.set_value("chamber_damage", true);
-            state_machine.get_value("on_fire_signal").fire();
-        };
-
-        // ? "updates every half a second" section
-        if (tick <= 10) {
-            return;
-        };
-
-        if (state_machine.get_value("power_in") < 10) { // power_in implementation
-            state_machine.set_value("powered", false);
+            state_machine.change_state("DESTROYED");
             return;
         };
 
@@ -272,7 +251,8 @@ class Game {
         //Generate new statemachines for the units
         for (let i = 0; i < 12; i++) {
             let visible_number = i+1
-            system_objects[i] = new StateMachine(template_unit_generate(visible_number), "NORMAL");
+            let state_machine = new StateMachine(template_unit_generate(visible_number), "NORMAL");
+            system_objects[i] = state_machine;
 
             let element = document.querySelector("#u"+visible_number);
             element.querySelector("h4").innerHTML = "UNIT "+ (visible_number < 10 ? '0' + visible_number : visible_number.toString())
@@ -280,20 +260,64 @@ class Game {
             element.addEventListener("click", _ => {
                 Observer.change_lookat(visible_number-1);
             })
+
+            state_machine.get_value("cd_signal").connect("destroyed", _ => {
+                let element = document.querySelector("#u"+state_machine.get_value("identifier"));
+                element.querySelector("hr").style.backgroundColor = "orange";
+
+            });
+
+            state_machine.get_value("destroyed_signal").connect("destroyed", _ => {
+                let element = document.querySelector("#u"+state_machine.get_value("identifier"));
+                element.querySelector("hr").style.backgroundColor = "black";
+                new_log("UNIT " + state_machine.get_value("identifier") + " DISCONNECTED [REF :: DISCONNECTED]", "red")
+
+                dead+=1
+                time = 0;
+            });
         }
 
         data = data;
     
         //Unit interval
         setInterval(_ => {
+            if (is_game_over) {
+                return;
+            }
             for (let i = 0; i < 12; i++) {
                 system_objects[i].tick();
             };
             time = time + 0.05;
+
+            if (!(dead >= 12)) {
+                score = Math.floor(score + 0.1 * data.difficulty_index); // score calculation\
+                document.querySelector("#score").innerHTML = score;
+            } else {
+                is_game_over = true;
+
+                let element = append_new_element("div", document.querySelector("body"), "percent50-background", "fixed-fullscreen", {
+                    textAlign: "center",
+                });
+                append_new_element("h3", element, "", "", {
+                    fontFamily: "monospace",
+                    fontSize: "3em",
+                }).innerHTML = "Game Over";
+                append_new_element("h4", element, "", "", {
+                    fontFamily: "monospace",
+                    fontSize: "2em",
+                }).innerHTML = "Score: " + score;
+                
+
+                // SAVE DATA
+            }
         }, 50) // 20 ticks a second
     
         // new queue event interval
         setInterval(_ => {
+            if (is_game_over) {
+                return;
+            }
+
             for (let [_, state_machine] of Object.entries(system_objects)) {
                 let queueable_objects = {   // variables for it to edit
                     coolant_in_flow: 1,      // rate of flow (in liters per tick)
@@ -307,8 +331,6 @@ class Game {
                 state_machine.get_value("queue").push(queueable_objects);
             }
         }, 1000)
-
-        
     
         Observer.start_now(system_objects);
     }

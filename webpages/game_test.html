@@ -18,6 +18,7 @@
         <script src="../scripts/libraries/storage.js" defer></script> 
         <script src="../scripts/libraries/signal.js" defer></script> 
         <script src="../scripts/libraries/input.js" defer></script> 
+        <script src="../scripts/libraries/sound.js" defer></script> 
 
         <script src="../scripts/game/observer.js" defer></script> 
         <script src="../scripts/game/interactions.js" defer></script>
@@ -88,11 +89,12 @@
                 
             </section>
         </section>
-
+        <p id="score"></p>
         <section id="system-monitor">
             <div id="left-monitor" >
                 <h3>UNIT MONITOR</h3>
-                <h2>Seleceted Unit: 00</h2>
+                <h2>Selected Unit: 01</h2>
+                <h4 id="base_coolant">a</h4>
                 <h4 id="coolant_amount">a</h4>
                 <h4 id="_coolant_amount_rate">winging it</h4>
                 <h4 id="coolant_in_flow">sd</h4>
@@ -106,7 +108,12 @@
             </div>
             <div id="right-monitor">
                 <h3>SYSTEMS MONITOR</h3>
+                <div id="log">
+                    <p>log</p>
+                </div>
             </div>
         </section>
+
+        <p id="command">&emsp;Select Targets: W - All units, O - Selected unit</p>
     </body>
 </html>
