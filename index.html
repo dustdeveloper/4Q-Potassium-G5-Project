@@ -60,7 +60,7 @@
                     <div><input type="button" class="form-button" id="button-left" value="Instructor" onclick="setDifficultyValue(false)"><input type="button" class="form-button" id="button-right" value="Trainee" onclick="setDifficultyValue(true)"></div><br>
 
                     <label id="difficulty-selector" for="difficulty">Difficulty</label><br>
-                    <div id="difficulty-selection"><input type="button" class="form-button" id="button-left" value="Easy" onclick="set_difficulty_index(1000)"><input type="button" class="form-button" id="button-center" value="Medium" onclick="set_difficulty_index(500)"><input type="button" class="form-button" id="button-right" value="Hard" onclick="set_difficulty_index(0)"></div><br>
+                    <div id="difficulty-selection"><input type="button" class="form-button" id="button-left" value="Easy" onclick="set_difficulty_index(75)"><input type="button" class="form-button" id="button-center" value="Medium" onclick="set_difficulty_index(50)"><input type="button" class="form-button" id="button-right" value="Hard" onclick="set_difficulty_index(25)"></div><br>
                     <input type="submit" value="Start Game" id="submit-button">
                 </form>
                 <div>
@@ -73,7 +73,7 @@
                 </div>
 
                 <script>
-                    let difficulty_index = 1000;
+                    let difficulty_index = 50;
 
                     function set_difficulty_index(temp) {
                         difficulty_index = temp

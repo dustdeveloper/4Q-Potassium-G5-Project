@@ -30,8 +30,6 @@ var is_game_over = false;
 const clamp = (num, min, max) => Math.min(Math.max(num, min), max) // Range Limit
 
 function new_log(text , color = "yellow") {
-    let beep = new Sound("../../assets/audio/log_beep.mp3", 0.5);
-    beep.play();
 
     let log = document.querySelector("#log");
     let new_log = append_new_element("p", log, "cl", "", {color: color});
